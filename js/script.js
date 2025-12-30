@@ -1,5 +1,4 @@
 const translations = window.SCRAPPO_I18N || {};
-
 const panels = document.querySelectorAll("[data-panel]");
 const langButtons = document.querySelectorAll("[data-lang]");
 const volumeSlider = document.querySelector("[data-volume]");
@@ -9,6 +8,7 @@ const mapApi = window.SCRAPPO_MAP;
 const waveApi = window.SCRAPPO_WAVE_SYSTEM;
 const weaponApi = window.SCRAPPO_WEAPON_SYSTEM;
 const abilityApi = window.SCRAPPO_ABILITY_SYSTEM;
+const characterSystem = window.SCRAPPO_CHARACTER_SYSTEM;
 const LOCAL_STORAGE_KEY = "scrappo.lang";
 
 const getInitialLanguage = () => {
@@ -62,6 +62,9 @@ const setLanguage = (lang) => {
   if (abilityApi && typeof abilityApi.refreshTexts === "function") {
     abilityApi.refreshTexts();
   }
+  if (characterSystem && typeof characterSystem.refreshTexts === "function") {
+    characterSystem.refreshTexts();
+  }
 };
 
 const showPanel = (panelName) => {
@@ -74,6 +77,10 @@ const showPanel = (panelName) => {
   const isGame = panelName === "game";
   document.body.classList.toggle("is-game", isGame);
   document.documentElement.classList.toggle("is-game", isGame);
+
+  if (panelName === "characters" && characterSystem && typeof characterSystem.showSelection === "function") {
+    characterSystem.showSelection();
+  }
 
   if (!isGame && mapApi && typeof mapApi.stop === "function") {
     mapApi.stop();
@@ -189,12 +196,6 @@ const setupParallax = () => {
 };
 
 document.addEventListener("click", (event) => {
-  const character = event.target.closest("[data-character]");
-  if (character) {
-    startGame();
-    return;
-  }
-
   const action = event.target.closest("[data-action]");
   if (!action) {
     return;
@@ -222,5 +223,6 @@ setupVolumeControls();
 setupParallax();
 
 window.SCRAPPO_UI = {
-  showPanel
+  showPanel,
+  startGame
 };

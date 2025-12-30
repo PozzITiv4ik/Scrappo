@@ -6,6 +6,7 @@
     <title data-i18n="meta.title"></title>
     <link rel="stylesheet" href="css/colors.css" />
     <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/characters.css" />
     <link rel="stylesheet" href="css/map.css" />
     <link rel="stylesheet" href="css/player.css" />
     <link rel="stylesheet" href="css/abilities.css" />
@@ -91,13 +92,18 @@
             <button class="back-button" type="button" data-action="back" data-i18n="settings.back"></button>
           </section>
           <section class="panel panel--characters" data-panel="characters" aria-hidden="true">
-            <h2 class="panel-title" data-i18n="characters.title"></h2>
-            <div class="character-list">
-              <button class="menu-button character-button" type="button" data-character="normal" data-i18n="characters.normal"></button>
-              <button class="menu-button character-button" type="button" data-character="psycho" data-i18n="characters.psycho"></button>
-              <button class="menu-button character-button" type="button" data-character="agile" data-i18n="characters.agile"></button>
+            <div class="character-shell">
+              <header class="character-header">
+                <h2 class="panel-title character-title" data-i18n="characters.title"></h2>
+                <p class="character-subtitle" data-i18n="characters.subtitle"></p>
+              </header>
+              <div class="character-carousel" data-character-carousel>
+                <div class="character-track" data-character-track></div>
+              </div>
+              <div class="character-actions">
+                <button class="back-button" type="button" data-action="back" data-i18n="settings.back"></button>
+              </div>
             </div>
-            <button class="back-button" type="button" data-action="back" data-i18n="settings.back"></button>
           </section>
           <section class="panel panel--game" data-panel="game" aria-hidden="true">
             <div class="wave-timer" data-wave-timer aria-live="polite"></div>
@@ -191,7 +197,10 @@
     <script src="js/weapons/weapons-texts.js"></script>
     <script src="js/weapons/weapons.js"></script>
     <script src="js/waves/waves.js"></script>
+    <script src="js/characters/base.js"></script>
+    <script src="js/characters/characters.js"></script>
     <script src="js/player.js"></script>
+    <script src="js/characters/character-system.js"></script>
     <script src="js/map/shared.js"></script>
     <script src="js/map/world.js"></script>
     <script src="js/map/player.js"></script>

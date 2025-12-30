@@ -8,15 +8,27 @@
 
   const applyWeaponModifiers = (weapon) => {
     const abilityApi = internal.getAbilityApi();
+    const characterMods = window.SCRAPPO_CHARACTER_MODIFIERS || {};
     if (!abilityApi || typeof abilityApi.getCombatModifiers !== "function") {
-      return weapon;
+      const damagePct = typeof characterMods.damagePct === "number" ? characterMods.damagePct : 0;
+      const fireRatePct = typeof characterMods.fireRatePct === "number" ? characterMods.fireRatePct : 0;
+      const damageFlat = typeof characterMods.damageFlat === "number" ? characterMods.damageFlat : 0;
+      const damage = Math.max(1, Math.round((weapon.damage + damageFlat) * (1 + damagePct)));
+      const fireRate = Math.max(0.1, weapon.fireRate * (1 + fireRatePct));
+      return { ...weapon, damage, fireRate };
     }
     const mods = abilityApi.getCombatModifiers();
     const damageMultiplier = typeof mods.damageMultiplier === "number" ? mods.damageMultiplier : 1;
     const fireRateMultiplier = typeof mods.fireRateMultiplier === "number" ? mods.fireRateMultiplier : 1;
     const damageFlat = typeof mods.damageFlat === "number" ? mods.damageFlat : 0;
-    const damage = Math.max(1, Math.round((weapon.damage + damageFlat) * damageMultiplier));
-    const fireRate = Math.max(0.1, weapon.fireRate * fireRateMultiplier);
+    const damagePct = typeof characterMods.damagePct === "number" ? characterMods.damagePct : 0;
+    const fireRatePct = typeof characterMods.fireRatePct === "number" ? characterMods.fireRatePct : 0;
+    const charDamageFlat = typeof characterMods.damageFlat === "number" ? characterMods.damageFlat : 0;
+    const damage = Math.max(
+      1,
+      Math.round((weapon.damage + damageFlat + charDamageFlat) * damageMultiplier * (1 + damagePct))
+    );
+    const fireRate = Math.max(0.1, weapon.fireRate * fireRateMultiplier * (1 + fireRatePct));
     return { ...weapon, damage, fireRate };
   };
 
