@@ -91,8 +91,8 @@
   width: min(260px, 40vw);
   height: 26px;
   border-radius: 8px;
-  border: 2px solid var(--white-strong);
-  background: var(--black-55);
+  border: 1px solid var(--outline-strong);
+  background: var(--coal-70);
   overflow: hidden;
   box-sizing: border-box;
   z-index: 5;
@@ -103,7 +103,7 @@
   position: absolute;
   inset: 0;
   width: 100%;
-  background: var(--red);
+  background: var(--accent);
 }
 
 .player-hp-text {
@@ -112,10 +112,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--white-strong);
+  color: var(--text-strong);
   font-size: clamp(0.9rem, 1.6vw, 1.2rem);
   letter-spacing: 0.08rem;
-  text-shadow: 0 2px 6px var(--black-70);
+  text-shadow: 0 2px 6px var(--shadow-strong);
 }
 
 .player-xp {
@@ -125,8 +125,8 @@
   width: min(260px, 40vw);
   height: 18px;
   border-radius: 8px;
-  border: 2px solid var(--white-strong);
-  background: var(--black-55);
+  border: 1px solid var(--outline-strong);
+  background: var(--coal-70);
   overflow: hidden;
   box-sizing: border-box;
   z-index: 5;
@@ -137,7 +137,7 @@
   position: absolute;
   inset: 0;
   width: 100%;
-  background: var(--white);
+  background: var(--mist-100);
 }
 
 .player-xp-text {
@@ -146,10 +146,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--white-strong);
+  color: var(--text-strong);
   font-size: clamp(0.7rem, 1.2vw, 0.95rem);
   letter-spacing: 0.08rem;
-  text-shadow: 0 2px 6px var(--black-70);
+  text-shadow: 0 2px 6px var(--shadow-strong);
 }
 
 .player-gold {
@@ -172,15 +172,15 @@
 }
 
 .player-gold-text {
-  color: var(--white-strong);
+  color: var(--text-strong);
   font-size: clamp(1.1rem, 2vw, 1.5rem);
   letter-spacing: 0.08rem;
   text-shadow: none;
 }
 
 .damage-number--player {
-  color: var(--red);
-  text-shadow: 0 2px 6px var(--black-80);
+  color: var(--accent);
+  text-shadow: 0 2px 6px var(--coal-92);
 }
 
 @keyframes playerSquash {

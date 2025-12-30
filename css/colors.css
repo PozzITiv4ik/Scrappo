@@ -1,83 +1,123 @@
 :root {
-  /* Core palette */
-  --black: #000;
-  --black-deep: #0b0b0b;
-  --ink: #1a1a1a;
-  --red: #e03a2e;
-  --red-dark: #b71f16;
-  --red-ink: #7a1511;
-  --red-ink-strong: #8b1a15;
-  --rare-blue: #1b4e7a;
-  --map-ground: #505d5c;
-  --white: #f8f6f1;
-  --white-strong: #ffffff;
-  --cream-1: #efe3d6;
-  --cream-2: #f1e7db;
-  --cream-3: #f3e9dd;
+  /* Core palette: steel/coal + oxide */
+  --coal-950: #0b0d10;
+  --coal-900: #12161b;
+  --coal-850: #171c22;
+  --graphite-800: #1f262e;
+  --graphite-700: #2a333d;
+  --steel-600: #38424c;
+  --steel-500: #4a5663;
+  --steel-400: #6a7786;
+  --mist-200: #c8d0d7;
+  --mist-100: #e3e8ed;
+  --mist-50: #f5f7f9;
+  --oxide-700: #7f321d;
+  --oxide-600: #963f25;
+  --oxide-500: #b34b2b;
+  --oxide-400: #d16239;
   --transparent: transparent;
 
-  /* Black alphas */
-  --black-03: rgba(0, 0, 0, 0.03);
-  --black-08: rgba(0, 0, 0, 0.08);
-  --black-18: rgba(0, 0, 0, 0.18);
-  --black-20: rgba(0, 0, 0, 0.2);
-  --black-25: rgba(0, 0, 0, 0.25);
-  --black-30: rgba(0, 0, 0, 0.3);
-  --black-35: rgba(0, 0, 0, 0.35);
-  --black-45: rgba(0, 0, 0, 0.45);
-  --black-55: rgba(0, 0, 0, 0.55);
-  --black-60: rgba(0, 0, 0, 0.6);
-  --black-70: rgba(0, 0, 0, 0.7);
-  --black-75: rgba(0, 0, 0, 0.75);
-  --black-80: rgba(0, 0, 0, 0.8);
-  --black-84: rgba(0, 0, 0, 0.84);
-  --black-90: rgba(0, 0, 0, 0.9);
-
-  /* Red alphas */
-  --red-12: rgba(224, 58, 46, 0.12);
-  --red-15: rgba(224, 58, 46, 0.15);
-  --red-18: rgba(224, 58, 46, 0.18);
-  --red-20: rgba(224, 58, 46, 0.2);
-  --red-25: rgba(224, 58, 46, 0.25);
-  --red-30: rgba(224, 58, 46, 0.3);
-  --red-32: rgba(224, 58, 46, 0.32);
-  --red-35: rgba(224, 58, 46, 0.35);
-  --red-55: rgba(224, 58, 46, 0.55);
-  --red-60: rgba(224, 58, 46, 0.6);
-  --red-85: rgba(224, 58, 46, 0.85);
-  --red-95: rgba(224, 58, 46, 0.95);
-  --red-dark-35: rgba(183, 31, 22, 0.35);
-
-  /* White alphas */
-  --white-05: rgba(255, 255, 255, 0.05);
-  --white-08: rgba(255, 255, 255, 0.08);
-  --white-45: rgba(255, 255, 255, 0.45);
-  --white-55: rgba(255, 255, 255, 0.55);
-  --white-65: rgba(255, 255, 255, 0.65);
-  --white-70: rgba(255, 255, 255, 0.7);
-  --white-98: rgba(255, 255, 255, 0.98);
-
-  /* Cream alphas */
-  --white-85: rgba(248, 246, 241, 0.85);
-  --white-92: rgba(248, 246, 241, 0.92);
-  --cream-96: rgba(236, 228, 216, 0.96);
-
-  /* Ink / muted */
-  --ink-25: rgba(26, 26, 26, 0.25);
-  --ink-75: rgba(26, 26, 26, 0.75);
-  --muted-80: rgba(120, 110, 110, 0.8);
-
-  /* Rare blue alphas */
-  --rare-blue-12: rgba(27, 78, 122, 0.12);
-  --rare-blue-60: rgba(27, 78, 122, 0.6);
-
-  /* Warm overlay tints */
-  --warm-85: rgba(30, 20, 20, 0.85);
-  --deep-brown-92: rgba(16, 10, 10, 0.92);
+  /* Alpha tokens */
+  --coal-15: rgba(11, 13, 16, 0.15);
+  --coal-35: rgba(11, 13, 16, 0.35);
+  --coal-55: rgba(11, 13, 16, 0.55);
+  --coal-70: rgba(11, 13, 16, 0.7);
+  --coal-85: rgba(11, 13, 16, 0.85);
+  --coal-92: rgba(11, 13, 16, 0.92);
+  --mist-08: rgba(227, 232, 237, 0.08);
+  --mist-20: rgba(227, 232, 237, 0.2);
+  --mist-45: rgba(227, 232, 237, 0.45);
+  --oxide-20: rgba(179, 75, 43, 0.2);
+  --oxide-35: rgba(179, 75, 43, 0.35);
+  --oxide-60: rgba(179, 75, 43, 0.6);
 
   /* Semantic tokens */
-  --panel: var(--white-92);
-  --panel-border: var(--red-85);
-  --shadow: var(--black-45);
-  --red-glow: var(--red-18);
+  --bg: var(--coal-950);
+  --bg-elevated: var(--coal-900);
+  --surface: var(--graphite-800);
+  --surface-strong: var(--graphite-700);
+  --surface-soft: var(--steel-600);
+  --text: var(--mist-100);
+  --text-strong: var(--mist-50);
+  --text-muted: var(--mist-200);
+  --accent: var(--oxide-500);
+  --accent-strong: var(--oxide-400);
+  --accent-dark: var(--oxide-700);
+  --outline: var(--steel-500);
+  --outline-strong: var(--steel-400);
+  --map-ground: #48545c;
+  --shadow-soft: var(--coal-35);
+  --shadow-strong: var(--coal-55);
+
+  /* Legacy aliases for existing CSS */
+  --black: var(--coal-950);
+  --black-deep: var(--coal-900);
+  --ink: var(--coal-950);
+  --red: var(--oxide-500);
+  --red-dark: var(--oxide-700);
+  --red-ink: var(--oxide-600);
+  --red-ink-strong: var(--oxide-400);
+  --rare-blue: var(--steel-400);
+  --white: var(--mist-100);
+  --white-strong: var(--mist-50);
+  --cream-1: var(--mist-100);
+  --cream-2: var(--mist-50);
+  --cream-3: var(--mist-200);
+
+  /* Legacy alphas */
+  --black-03: rgba(11, 13, 16, 0.03);
+  --black-08: rgba(11, 13, 16, 0.08);
+  --black-18: rgba(11, 13, 16, 0.18);
+  --black-20: rgba(11, 13, 16, 0.2);
+  --black-25: rgba(11, 13, 16, 0.25);
+  --black-30: rgba(11, 13, 16, 0.3);
+  --black-35: rgba(11, 13, 16, 0.35);
+  --black-45: rgba(11, 13, 16, 0.45);
+  --black-55: rgba(11, 13, 16, 0.55);
+  --black-60: rgba(11, 13, 16, 0.6);
+  --black-70: rgba(11, 13, 16, 0.7);
+  --black-75: rgba(11, 13, 16, 0.75);
+  --black-80: rgba(11, 13, 16, 0.8);
+  --black-84: rgba(11, 13, 16, 0.84);
+  --black-90: rgba(11, 13, 16, 0.9);
+
+  --red-12: rgba(179, 75, 43, 0.12);
+  --red-15: rgba(179, 75, 43, 0.15);
+  --red-18: rgba(179, 75, 43, 0.18);
+  --red-20: rgba(179, 75, 43, 0.2);
+  --red-25: rgba(179, 75, 43, 0.25);
+  --red-30: rgba(179, 75, 43, 0.3);
+  --red-32: rgba(179, 75, 43, 0.32);
+  --red-35: rgba(179, 75, 43, 0.35);
+  --red-55: rgba(179, 75, 43, 0.55);
+  --red-60: rgba(179, 75, 43, 0.6);
+  --red-85: rgba(179, 75, 43, 0.85);
+  --red-95: rgba(179, 75, 43, 0.95);
+  --red-dark-35: rgba(127, 50, 29, 0.35);
+
+  --white-05: rgba(227, 232, 237, 0.05);
+  --white-08: rgba(227, 232, 237, 0.08);
+  --white-45: rgba(227, 232, 237, 0.45);
+  --white-55: rgba(227, 232, 237, 0.55);
+  --white-65: rgba(227, 232, 237, 0.65);
+  --white-70: rgba(227, 232, 237, 0.7);
+  --white-85: rgba(227, 232, 237, 0.85);
+  --white-92: rgba(227, 232, 237, 0.92);
+  --white-98: rgba(245, 247, 249, 0.98);
+  --cream-96: rgba(227, 232, 237, 0.96);
+
+  --ink-25: rgba(11, 13, 16, 0.25);
+  --ink-75: rgba(11, 13, 16, 0.75);
+  --muted-80: rgba(106, 119, 134, 0.8);
+
+  --rare-blue-12: rgba(106, 119, 134, 0.12);
+  --rare-blue-60: rgba(106, 119, 134, 0.6);
+
+  --warm-85: rgba(18, 22, 27, 0.85);
+  --deep-brown-92: rgba(11, 13, 16, 0.92);
+
+  --panel: var(--coal-70);
+  --panel-border: var(--outline);
+  --shadow: var(--shadow-strong);
+  --red-glow: var(--oxide-20);
 }
