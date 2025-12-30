@@ -7,66 +7,71 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="scene">
-      <header class="hero">
-        <div class="sigil" aria-hidden="true"></div>
-        <h1 class="title" data-i18n="meta.title"></h1>
-      </header>
-
-      <main class="panel-shell">
-        <section class="panel panel--active" data-panel="main">
-          <h2 class="panel-title" data-i18n="menu.title"></h2>
-          <div class="menu">
-            <button
-              class="menu-button is-locked"
-              type="button"
-              data-action="play"
-              data-disabled="true"
-              aria-disabled="true"
-              style="--delay: 0ms"
-              data-i18n="menu.play"
-            >
-            </button>
-            <button
-              class="menu-button"
-              type="button"
-              data-action="settings"
-              style="--delay: 120ms"
-              data-i18n="menu.settings"
-            >
-            </button>
-            <button
-              class="menu-button is-locked"
-              type="button"
-              data-action="exit"
-              data-disabled="true"
-              aria-disabled="true"
-              style="--delay: 240ms"
-              data-i18n="menu.exit"
-            >
-            </button>
-          </div>
-        </section>
-
-        <section class="panel" data-panel="settings" aria-hidden="true">
-          <h2 class="panel-title" data-i18n="settings.title"></h2>
-          <div class="setting-group">
-            <span class="setting-label" data-i18n="settings.language"></span>
-            <div
-              class="language-options"
-              role="group"
-              data-i18n="settings.language"
-              data-i18n-attr="aria-label"
+    <div class="stage">
+      <div class="parallax-bg" aria-hidden="true"></div>
+      <div class="parallax-overlay" aria-hidden="true"></div>
+      <div class="scene">
+        <main class="panel-shell">
+          <section class="panel panel--active panel--menu" data-panel="main">
+            <img
+              class="logo"
+              src="icons/scrappo.png"
+              alt=""
+              data-i18n="meta.title"
+              data-i18n-attr="alt"
               data-i18n-text="false"
-            >
-              <button class="lang-button" type="button" data-lang="en" data-i18n="lang.english"></button>
-              <button class="lang-button" type="button" data-lang="ru" data-i18n="lang.russian"></button>
+            />
+            <div class="menu">
+              <button
+                class="menu-button is-locked"
+                type="button"
+                data-action="play"
+                data-disabled="true"
+                aria-disabled="true"
+                style="--delay: 0ms"
+                data-i18n="menu.play"
+              >
+              </button>
+              <button
+                class="menu-button"
+                type="button"
+                data-action="settings"
+                style="--delay: 120ms"
+                data-i18n="menu.settings"
+              >
+              </button>
+              <button
+                class="menu-button is-locked"
+                type="button"
+                data-action="exit"
+                data-disabled="true"
+                aria-disabled="true"
+                style="--delay: 240ms"
+                data-i18n="menu.exit"
+              >
+              </button>
             </div>
-          </div>
-          <button class="back-button" type="button" data-action="back" data-i18n="settings.back"></button>
-        </section>
-      </main>
+          </section>
 
+          <section class="panel panel--settings" data-panel="settings" aria-hidden="true">
+            <h2 class="panel-title" data-i18n="settings.title"></h2>
+            <div class="setting-group">
+              <span class="setting-label" data-i18n="settings.language"></span>
+              <div
+                class="language-options"
+                role="group"
+                data-i18n="settings.language"
+                data-i18n-attr="aria-label"
+                data-i18n-text="false"
+              >
+                <button class="lang-button" type="button" data-lang="en" data-i18n="lang.english"></button>
+                <button class="lang-button" type="button" data-lang="ru" data-i18n="lang.russian"></button>
+              </div>
+            </div>
+            <button class="back-button" type="button" data-action="back" data-i18n="settings.back"></button>
+          </section>
+        </main>
+      </div>
     </div>
 
     <script src="translations.js"></script>

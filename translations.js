@@ -1,7 +1,6 @@
 window.SCRAPPO_I18N = {
   en: {
     "meta.title": "Scrappo",
-    "menu.title": "Main Menu",
     "menu.play": "Play",
     "menu.settings": "Settings",
     "menu.exit": "Exit",
@@ -13,7 +12,6 @@ window.SCRAPPO_I18N = {
   },
   ru: {
     "meta.title": "Scrappo",
-    "menu.title": "Главное меню",
     "menu.play": "Играть",
     "menu.settings": "Настройки",
     "menu.exit": "Выход",

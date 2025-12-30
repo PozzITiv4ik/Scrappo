@@ -62,6 +62,64 @@ const showPanel = (panelName) => {
   });
 };
 
+const setupParallax = () => {
+  const stage = document.querySelector(".stage");
+  if (!stage) {
+    return;
+  }
+
+  const prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (prefersReduced) {
+    return;
+  }
+
+  let targetX = 0;
+  let targetY = 0;
+  let currentX = 0;
+  let currentY = 0;
+  let frameId = null;
+
+  const maxOffsetX = 26;
+  const maxOffsetY = 18;
+
+  const animate = () => {
+    currentX += (targetX - currentX) * 0.08;
+    currentY += (targetY - currentY) * 0.08;
+    stage.style.setProperty("--parallax-x", `${currentX.toFixed(2)}px`);
+    stage.style.setProperty("--parallax-y", `${currentY.toFixed(2)}px`);
+
+    if (Math.abs(targetX - currentX) < 0.1 && Math.abs(targetY - currentY) < 0.1) {
+      frameId = null;
+      return;
+    }
+
+    frameId = window.requestAnimationFrame(animate);
+  };
+
+  const updateTarget = (event) => {
+    const rect = stage.getBoundingClientRect();
+    const relativeX = (event.clientX - rect.left) / rect.width - 0.5;
+    const relativeY = (event.clientY - rect.top) / rect.height - 0.5;
+    targetX = relativeX * maxOffsetX;
+    targetY = relativeY * maxOffsetY;
+    if (!frameId) {
+      frameId = window.requestAnimationFrame(animate);
+    }
+  };
+
+  const resetTarget = () => {
+    targetX = 0;
+    targetY = 0;
+    if (!frameId) {
+      frameId = window.requestAnimationFrame(animate);
+    }
+  };
+
+  stage.addEventListener("pointermove", updateTarget);
+  stage.addEventListener("pointerleave", resetTarget);
+  window.addEventListener("blur", resetTarget);
+};
+
 document.addEventListener("click", (event) => {
   const action = event.target.closest("[data-action]");
   if (!action) {
@@ -86,3 +144,4 @@ langButtons.forEach((button) => {
 });
 
 setLanguage(getInitialLanguage());
+setupParallax();
