@@ -71,28 +71,97 @@ body.is-game .stage {
   position: absolute;
   width: 52px;
   height: 52px;
-  image-rendering: auto;
   transform: translate3d(0, 0, 0);
   pointer-events: none;
   z-index: 3;
+  overflow: visible;
+  --player-size: 52px;
+  --leg-size: 20px;
+  --hand-size: 22px;
+  --weapon-size: 44px;
+  --leg-right-x: 32px;
+  --leg-left-x: 20px;
+  --leg-y: 40px;
+  --hand-right-x: 36px;
+  --hand-right-y: 24px;
+  --hand-left-x: 14px;
+  --hand-left-y: 24px;
+  --weapon-right-x: 44px;
+  --weapon-right-y: 22px;
+  --weapon-left-x: 10px;
+  --weapon-left-y: 22px;
 }
 
 .player-sprite {
+  position: absolute;
+  left: 50%;
+  top: 50%;
   width: 100%;
   height: 100%;
   display: block;
   pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.player-leg {
+  position: absolute;
+  width: var(--leg-size);
+  height: auto;
+  top: var(--leg-y);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.player-leg--right {
+  left: var(--leg-right-x);
+}
+
+.player-leg--left {
+  left: var(--leg-left-x);
+  transform: translate(-50%, -50%) scaleX(-1);
+}
+
+.player-hand {
+  position: absolute;
+  width: var(--hand-size);
+  height: auto;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.player-hand--right {
+  left: var(--hand-right-x);
+  top: var(--hand-right-y);
+}
+
+.player-hand--left {
+  left: var(--hand-left-x);
+  top: var(--hand-left-y);
+  transform: translate(-50%, -50%) scaleX(-1);
 }
 
 .player-weapon {
   position: absolute;
-  left: 55%;
-  top: 50%;
-  width: 44px;
+  width: var(--weapon-size);
   height: auto;
-  transform: translate(-50%, -50%) rotate(0deg);
+  transform: translate(-50%, -50%) rotate(var(--weapon-rotation, 0deg));
   transform-origin: 20% 50%;
   pointer-events: none;
+  z-index: 4;
+}
+
+.player-weapon--right {
+  left: var(--weapon-right-x);
+  top: var(--weapon-right-y);
+}
+
+.player-weapon--left {
+  left: var(--weapon-left-x);
+  top: var(--weapon-left-y);
+  transform-origin: 80% 50%;
 }
 
 .mob {

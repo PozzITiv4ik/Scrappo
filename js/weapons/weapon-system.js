@@ -2,9 +2,10 @@
   const SLOT_COUNT = 4;
   const weaponSlots = new Array(SLOT_COUNT).fill(null);
   weaponSlots[0] = "pistol";
-  let activeSlot = 0;
+  const handSlots = { right: 0, left: 1 };
+  const hands = ["right", "left"];
 
-  let lastShotAt = 0;
+  let lastShotAt = { right: 0, left: 0 };
   let lastTick = 0;
   let running = false;
   let rafId = null;
@@ -12,27 +13,40 @@
   const bullets = new Map();
 
   const getWeaponData = () => window.SCRAPPO_WEAPONS || {};
-  const getEquippedWeapon = () => {
+  const getWeaponForHand = (hand) => {
     const weapons = getWeaponData();
-    const weaponId = weaponSlots[activeSlot];
+    const weaponId = weaponSlots[handSlots[hand]];
     return weapons[weaponId];
   };
 
-  const getWeaponElement = () => document.querySelector("[data-weapon]");
+  const getWeaponElement = (hand) => document.querySelector(`[data-weapon="${hand}"]`);
   const getWorldElement = () => document.querySelector("[data-world]");
+  const getPlayerElement = () => document.querySelector("[data-player]");
 
   const updateWeaponSprite = () => {
-    const weapon = getEquippedWeapon();
-    const weaponEl = getWeaponElement();
-    if (!weapon || !weaponEl) {
-      return;
-    }
-    weaponEl.src = weapon.sprite;
+    const weapons = getWeaponData();
+    hands.forEach((hand) => {
+      const weaponId = weaponSlots[handSlots[hand]];
+      const weapon = weapons[weaponId];
+      const weaponEl = getWeaponElement(hand);
+      if (!weaponEl) {
+        return;
+      }
+      if (!weapon) {
+        weaponEl.hidden = true;
+        return;
+      }
+      weaponEl.hidden = false;
+      weaponEl.src = weapon.sprite;
+      if (typeof weapon.size === "number") {
+        weaponEl.style.width = `${weapon.size}px`;
+      }
+    });
   };
 
-  const aimWeapon = (target) => {
+  const aimWeapon = (hand, target) => {
     const mapApi = window.SCRAPPO_MAP;
-    const weaponEl = getWeaponElement();
+    const weaponEl = getWeaponElement(hand);
     if (!mapApi || !weaponEl || typeof mapApi.getPlayerPosition !== "function") {
       return;
     }
@@ -43,7 +57,7 @@
       angle = Math.atan2(target.y - playerPos.y, target.x - playerPos.x);
     }
     const degrees = angle * (180 / Math.PI);
-    weaponEl.style.transform = `translate(-50%, -50%) rotate(${degrees.toFixed(1)}deg)`;
+    weaponEl.style.setProperty("--weapon-rotation", `${degrees.toFixed(1)}deg`);
   };
 
   const spawnDamageNumber = (position, amount) => {
@@ -60,10 +74,30 @@
     world.appendChild(label);
   };
 
-  const createBullet = (weapon, target) => {
+  const getWeaponOffset = (hand) => {
+    const playerEl = getPlayerElement();
+    if (!playerEl) {
+      return { x: 0, y: 0 };
+    }
+    const styles = getComputedStyle(playerEl);
+    const rawX = styles.getPropertyValue(`--weapon-${hand}-x`);
+    const rawY = styles.getPropertyValue(`--weapon-${hand}-y`);
+    return {
+      x: Number.parseFloat(rawX) || 0,
+      y: Number.parseFloat(rawY) || 0
+    };
+  };
+
+  const createBullet = (hand, weapon, target) => {
     const mapApi = window.SCRAPPO_MAP;
     const world = getWorldElement();
-    if (!mapApi || !world || !target || typeof mapApi.getPlayerPosition !== "function") {
+    if (
+      !mapApi ||
+      !world ||
+      !target ||
+      typeof mapApi.getPlayerPosition !== "function" ||
+      typeof mapApi.getPlayerSize !== "function"
+    ) {
       return null;
     }
 
@@ -86,8 +120,12 @@
     const offset = typeof ammo.offset === "number" ? ammo.offset : 20;
     const dirX = dx / distance;
     const dirY = dy / distance;
-    const startX = playerPos.x + dirX * offset;
-    const startY = playerPos.y + dirY * offset;
+    const playerSize = mapApi.getPlayerSize();
+    const anchor = getWeaponOffset(hand);
+    const anchorX = playerPos.x - playerSize / 2 + anchor.x;
+    const anchorY = playerPos.y - playerSize / 2 + anchor.y;
+    const startX = anchorX + dirX * offset;
+    const startY = anchorY + dirY * offset;
     const angle = Math.atan2(dirY, dirX);
 
     const el = document.createElement("img");
@@ -147,12 +185,12 @@
     return closest;
   };
 
-  const shoot = (weapon, target, now) => {
-    if (createBullet(weapon, target)) {
+  const shoot = (hand, weapon, target, now) => {
+    if (createBullet(hand, weapon, target)) {
       if (window.SCRAPPO_SOUND && typeof window.SCRAPPO_SOUND.playShot === "function") {
         window.SCRAPPO_SOUND.playShot();
       }
-      lastShotAt = now;
+      lastShotAt[hand] = now;
     }
   };
 
@@ -226,20 +264,21 @@
     const delta = Math.min(0.05, (now - lastTick) / 1000);
     lastTick = now;
 
-    const weapon = getEquippedWeapon();
-    if (!weapon) {
-      updateBullets(delta);
-      rafId = requestAnimationFrame(tick);
-      return;
-    }
+    hands.forEach((hand) => {
+      const weapon = getWeaponForHand(hand);
+      if (!weapon) {
+        aimWeapon(hand, null);
+        return;
+      }
 
-    const target = findTarget(weapon);
-    aimWeapon(target);
+      const target = findTarget(weapon);
+      aimWeapon(hand, target);
 
-    const cooldown = 1000 / weapon.fireRate;
-    if (target && now - lastShotAt >= cooldown) {
-      shoot(weapon, target, now);
-    }
+      const cooldown = 1000 / weapon.fireRate;
+      if (target && now - lastShotAt[hand] >= cooldown) {
+        shoot(hand, weapon, target, now);
+      }
+    });
 
     updateBullets(delta);
     rafId = requestAnimationFrame(tick);
@@ -250,8 +289,9 @@
       return;
     }
     running = true;
-    lastShotAt = performance.now();
-    lastTick = lastShotAt;
+    const now = performance.now();
+    lastShotAt = { right: now, left: now };
+    lastTick = now;
     clearBullets();
     updateWeaponSprite();
     rafId = requestAnimationFrame(tick);
@@ -272,7 +312,13 @@
     getSlots: () => weaponSlots.slice(),
     setActiveSlot: (index) => {
       if (index >= 0 && index < SLOT_COUNT) {
-        activeSlot = index;
+        handSlots.right = index;
+        updateWeaponSprite();
+      }
+    },
+    setHandSlot: (hand, index) => {
+      if (handSlots[hand] !== undefined && index >= 0 && index < SLOT_COUNT) {
+        handSlots[hand] = index;
         updateWeaponSprite();
       }
     }
