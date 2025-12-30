@@ -5,6 +5,7 @@
     itemSize: 28,
     itemCount: 14,
     speed: 240,
+    mobSpeed: 90,
     zoom: 2.5
   };
 
@@ -78,19 +79,24 @@
     mobEl.alt = "";
     mobEl.dataset.mobId = id;
     mobEl.dataset.mobType = mob.id || "mob";
-    if (mob.size) {
-      mobEl.style.width = `${mob.size}px`;
-      mobEl.style.height = `${mob.size}px`;
-    }
+    const size = typeof mob.size === "number" ? mob.size : CONFIG.playerSize;
+    mobEl.style.width = `${size}px`;
+    mobEl.style.height = `${size}px`;
     mobEl.style.left = `${position.x}px`;
     mobEl.style.top = `${position.y}px`;
     world.appendChild(mobEl);
-    mobs.set(id, mobEl);
+    mobs.set(id, {
+      el: mobEl,
+      x: position.x,
+      y: position.y,
+      size,
+      speed: typeof mob.speed === "number" ? mob.speed : CONFIG.mobSpeed
+    });
     return id;
   };
 
   const clearMobs = () => {
-    mobs.forEach((mobEl) => mobEl.remove());
+    mobs.forEach((mobData) => mobData.el.remove());
     mobs.clear();
   };
 
@@ -158,6 +164,30 @@
     );
   };
 
+  const updateMobs = (delta) => {
+    if (!mobs.size) {
+      return;
+    }
+
+    mobs.forEach((mob) => {
+      const dx = playerPos.x - mob.x;
+      const dy = playerPos.y - mob.y;
+      const distance = Math.hypot(dx, dy);
+      if (distance < 1) {
+        return;
+      }
+
+      const step = Math.min(mob.speed * delta, distance);
+      const nextX = mob.x + (dx / distance) * step;
+      const nextY = mob.y + (dy / distance) * step;
+      const halfSize = mob.size / 2;
+      mob.x = clamp(nextX, halfSize, CONFIG.mapSize - halfSize);
+      mob.y = clamp(nextY, halfSize, CONFIG.mapSize - halfSize);
+      mob.el.style.left = `${mob.x}px`;
+      mob.el.style.top = `${mob.y}px`;
+    });
+  };
+
   const tick = (timestamp) => {
     if (!active) {
       rafId = null;
@@ -168,6 +198,7 @@
     lastTime = timestamp;
 
     updateMovement(delta);
+    updateMobs(delta);
     updateCamera();
 
     rafId = window.requestAnimationFrame(tick);
