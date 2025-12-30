@@ -20,6 +20,7 @@
   };
 
   const getWeaponElement = (hand) => document.querySelector(`[data-weapon="${hand}"]`);
+  const getHandElement = (hand) => document.querySelector(`.player-hand--${hand}`);
   const getWorldElement = () => document.querySelector("[data-world]");
   const getPlayerElement = () => document.querySelector("[data-player]");
 
@@ -47,6 +48,7 @@
   const aimWeapon = (hand, target) => {
     const mapApi = window.SCRAPPO_MAP;
     const weaponEl = getWeaponElement(hand);
+    const handEl = getHandElement(hand);
     if (!mapApi || !weaponEl || typeof mapApi.getPlayerPosition !== "function") {
       return;
     }
@@ -58,6 +60,9 @@
     }
     const degrees = angle * (180 / Math.PI);
     weaponEl.style.setProperty("--weapon-rotation", `${degrees.toFixed(1)}deg`);
+    if (handEl) {
+      handEl.style.setProperty("--hand-rotation", `${degrees.toFixed(1)}deg`);
+    }
   };
 
   const spawnDamageNumber = (position, amount) => {

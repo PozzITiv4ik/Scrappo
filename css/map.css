@@ -79,17 +79,17 @@ body.is-game .stage {
   --leg-size: 20px;
   --hand-size: 22px;
   --weapon-size: 44px;
-  --leg-right-x: 32px;
-  --leg-left-x: 20px;
-  --leg-y: 40px;
-  --hand-right-x: 36px;
-  --hand-right-y: 24px;
-  --hand-left-x: 14px;
-  --hand-left-y: 24px;
-  --weapon-right-x: 44px;
-  --weapon-right-y: 22px;
-  --weapon-left-x: 10px;
-  --weapon-left-y: 22px;
+  --leg-right-x: 34px;
+  --leg-left-x: 18px;
+  --leg-y: 48px;
+  --hand-right-x: 46px;
+  --hand-right-y: 26px;
+  --hand-left-x: 6px;
+  --hand-left-y: 26px;
+  --weapon-right-x: calc(var(--hand-right-x) + 10px);
+  --weapon-right-y: calc(var(--hand-right-y) - 2px);
+  --weapon-left-x: calc(var(--hand-left-x) - 10px);
+  --weapon-left-y: calc(var(--hand-left-y) - 2px);
 }
 
 .player-sprite {
@@ -111,7 +111,7 @@ body.is-game .stage {
   top: var(--leg-y);
   transform: translate(-50%, -50%);
   pointer-events: none;
-  z-index: 1;
+  z-index: 3;
 }
 
 .player-leg--right {
@@ -127,9 +127,10 @@ body.is-game .stage {
   position: absolute;
   width: var(--hand-size);
   height: auto;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) rotate(var(--hand-rotation, 0deg));
+  transform-origin: 50% 50%;
   pointer-events: none;
-  z-index: 3;
+  z-index: 4;
 }
 
 .player-hand--right {
@@ -140,7 +141,7 @@ body.is-game .stage {
 .player-hand--left {
   left: var(--hand-left-x);
   top: var(--hand-left-y);
-  transform: translate(-50%, -50%) scaleX(-1);
+  transform: translate(-50%, -50%) scaleX(-1) rotate(var(--hand-rotation, 0deg));
 }
 
 .player-weapon {
@@ -150,7 +151,7 @@ body.is-game .stage {
   transform: translate(-50%, -50%) rotate(var(--weapon-rotation, 0deg));
   transform-origin: 20% 50%;
   pointer-events: none;
-  z-index: 4;
+  z-index: 5;
 }
 
 .player-weapon--right {
