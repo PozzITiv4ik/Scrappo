@@ -1,21 +1,20 @@
 (() => {
+  const playerApi = window.SCRAPPO_PLAYER;
+  if (!playerApi || !playerApi.config || !playerApi.state) {
+    return;
+  }
+  const playerConfig = playerApi.config;
+  const playerState = playerApi.state;
+
   const CONFIG = {
     mapSize: 1400,
-    playerSize: 52,
     itemSize: 28,
     itemCount: 14,
-    speed: 240,
     mobSpeed: 90,
     zoom: 2.5,
-    playerMaxHp: 100,
-    playerInvulnerableMs: 500,
-    playerPickupRadius: 160,
-    playerCollectRadius: 18,
     xpOrbSize: 18,
     xpMinPieces: 3,
-    xpMaxPieces: 6,
-    xpPullMinSpeed: 120,
-    xpPullMaxSpeed: 520
+    xpMaxPieces: 6
   };
 
   const PLANT_PATHS = [
@@ -50,26 +49,13 @@
   const keys = new Set();
   const mobs = new Map();
   const experienceDrops = new Map();
-  const playerPos = {
-    x: CONFIG.mapSize / 2,
-    y: CONFIG.mapSize / 2
-  };
-  const playerState = {
-    hp: CONFIG.playerMaxHp,
-    maxHp: CONFIG.playerMaxHp,
-    invulnerableUntil: 0,
-    level: 1,
-    xp: 0,
-    xpToNext: getXpForLevel(1),
-    pickupRadius: CONFIG.playerPickupRadius,
-    collectRadius: CONFIG.playerCollectRadius
-  };
+  if (!playerState.position) {
+    playerState.position = { x: CONFIG.mapSize / 2, y: CONFIG.mapSize / 2 };
+  }
+  const playerPos = playerState.position;
 
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
   const getExperienceSprites = () => window.SCRAPPO_EXPERIENCE_SPRITES || EXPERIENCE_SPRITES;
-  function getXpForLevel(level) {
-    return Math.round(100 + (level - 1) * 40);
-  }
 
   const setupWorld = () => {
     world.style.width = `${CONFIG.mapSize}px`;
@@ -161,8 +147,8 @@
   };
 
   const updatePlayer = () => {
-    const offsetX = playerPos.x - CONFIG.playerSize / 2;
-    const offsetY = playerPos.y - CONFIG.playerSize / 2;
+    const offsetX = playerPos.x - playerConfig.size / 2;
+    const offsetY = playerPos.y - playerConfig.size / 2;
     player.style.transform = `translate3d(${offsetX}px, ${offsetY}px, 0)`;
   };
 
@@ -210,7 +196,7 @@
         playerState.level += 1;
         remaining -= needed;
         playerState.xp = 0;
-        playerState.xpToNext = getXpForLevel(playerState.level);
+        playerState.xpToNext = playerApi.getXpForLevel(playerState.level);
       } else {
         playerState.xp += remaining;
         remaining = 0;
@@ -220,15 +206,12 @@
   };
 
   const resetPlayerState = () => {
-    playerState.maxHp = CONFIG.playerMaxHp;
-    playerState.hp = CONFIG.playerMaxHp;
-    playerState.invulnerableUntil = 0;
+    if (typeof playerApi.resetState === "function") {
+      playerApi.resetState();
+    }
+    playerPos.x = CONFIG.mapSize / 2;
+    playerPos.y = CONFIG.mapSize / 2;
     updatePlayerHealthUI();
-    playerState.level = 1;
-    playerState.xp = 0;
-    playerState.xpToNext = getXpForLevel(playerState.level);
-    playerState.pickupRadius = CONFIG.playerPickupRadius;
-    playerState.collectRadius = CONFIG.playerCollectRadius;
     updatePlayerXpUI();
     if (player) {
       player.classList.remove("is-moving");
@@ -243,7 +226,7 @@
       return;
     }
     playerState.hp = Math.max(0, playerState.hp - amount);
-    playerState.invulnerableUntil = now + CONFIG.playerInvulnerableMs;
+    playerState.invulnerableUntil = now + playerConfig.invulnerableMs;
     updatePlayerHealthUI();
     spawnPlayerDamageNumber(amount);
     if (window.SCRAPPO_SOUND && typeof window.SCRAPPO_SOUND.playPlayerHit === "function") {
@@ -262,7 +245,7 @@
     mobEl.className = "mob";
     mobEl.dataset.mobId = id;
     mobEl.dataset.mobType = mob.id || "mob";
-    const size = typeof mob.size === "number" ? mob.size : CONFIG.playerSize;
+    const size = typeof mob.size === "number" ? mob.size : playerConfig.size;
     mobEl.style.width = `${size}px`;
     mobEl.style.height = `${size}px`;
     mobEl.style.left = `${position.x}px`;
@@ -395,18 +378,18 @@
     }
 
     const length = Math.hypot(axisX, axisY) || 1;
-    const velocityX = (axisX / length) * CONFIG.speed * delta;
-    const velocityY = (axisY / length) * CONFIG.speed * delta;
+    const velocityX = (axisX / length) * playerConfig.speed * delta;
+    const velocityY = (axisY / length) * playerConfig.speed * delta;
 
     playerPos.x = clamp(
       playerPos.x + velocityX,
-      CONFIG.playerSize / 2,
-      CONFIG.mapSize - CONFIG.playerSize / 2
+      playerConfig.size / 2,
+      CONFIG.mapSize - playerConfig.size / 2
     );
     playerPos.y = clamp(
       playerPos.y + velocityY,
-      CONFIG.playerSize / 2,
-      CONFIG.mapSize - CONFIG.playerSize / 2
+      playerConfig.size / 2,
+      CONFIG.mapSize - playerConfig.size / 2
     );
   };
 
@@ -416,7 +399,7 @@
     }
 
     const current = typeof now === "number" ? now : performance.now();
-    const playerRadius = CONFIG.playerSize / 2;
+    const playerRadius = playerConfig.size / 2;
     let hitApplied = false;
 
     mobs.forEach((mob) => {
@@ -453,8 +436,8 @@
 
     const radius = playerState.pickupRadius;
     const collectRadius = playerState.collectRadius;
-    const minSpeed = CONFIG.xpPullMinSpeed;
-    const maxSpeed = CONFIG.xpPullMaxSpeed;
+    const minSpeed = playerConfig.xpPullMinSpeed;
+    const maxSpeed = playerConfig.xpPullMaxSpeed;
     const halfSize = CONFIG.xpOrbSize / 2;
 
     experienceDrops.forEach((drop, id) => {
@@ -540,6 +523,10 @@
       return;
     }
 
+    player.style.width = `${playerConfig.size}px`;
+    player.style.height = `${playerConfig.size}px`;
+    player.style.setProperty("--player-size", `${playerConfig.size}px`);
+
     setupWorld();
     spawnItems();
     updateCamera();
@@ -584,7 +571,7 @@
     applyDamage,
     getPlayerPosition: () => ({ x: playerPos.x, y: playerPos.y }),
     getMapSize: () => CONFIG.mapSize,
-    getPlayerSize: () => CONFIG.playerSize,
+    getPlayerSize: () => playerConfig.size,
     getZoom: () => CONFIG.zoom
   };
 })();

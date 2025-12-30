@@ -48,74 +48,6 @@ body.is-game .stage {
   pointer-events: none;
 }
 
-.player-hp {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  width: min(260px, 40vw);
-  height: 26px;
-  border-radius: 8px;
-  border: 2px solid #ffffff;
-  background: rgba(0, 0, 0, 0.55);
-  overflow: hidden;
-  box-sizing: border-box;
-  z-index: 5;
-  pointer-events: none;
-}
-
-.player-hp-bar {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  background: #e03a2e;
-}
-
-.player-hp-text {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  font-size: clamp(0.9rem, 1.6vw, 1.2rem);
-  letter-spacing: 0.08rem;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
-}
-
-.player-xp {
-  position: absolute;
-  top: 52px;
-  left: 16px;
-  width: min(260px, 40vw);
-  height: 18px;
-  border-radius: 8px;
-  border: 2px solid #ffffff;
-  background: rgba(0, 0, 0, 0.55);
-  overflow: hidden;
-  box-sizing: border-box;
-  z-index: 5;
-  pointer-events: none;
-}
-
-.player-xp-bar {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  background: #f8f6f1;
-}
-
-.player-xp-text {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  font-size: clamp(0.7rem, 1.2vw, 0.95rem);
-  letter-spacing: 0.08rem;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
-}
-
 .game-frame {
   width: 100%;
   height: 100%;
@@ -133,92 +65,6 @@ body.is-game .stage {
   box-sizing: border-box;
   transform: translate3d(0, 0, 0);
   transform-origin: 0 0;
-}
-
-.player {
-  position: absolute;
-  width: 52px;
-  height: 52px;
-  transform: translate3d(0, 0, 0);
-  pointer-events: none;
-  z-index: 3;
-  overflow: visible;
-  --player-size: 52px;
-  --leg-size: 16px;
-  --weapon-size: 44px;
-  --leg-right-x: 34px;
-  --leg-left-x: 18px;
-  --leg-y: 46px;
-  --weapon-right-x: 56px;
-  --weapon-right-y: 24px;
-  --weapon-left-x: -4px;
-  --weapon-left-y: 24px;
-}
-
-.player-sprite {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 100%;
-  height: 100%;
-  display: block;
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  transform-origin: 50% 50%;
-  z-index: 2;
-}
-
-.player-leg {
-  position: absolute;
-  width: var(--leg-size);
-  height: auto;
-  top: var(--leg-y);
-  transform: translate(-50%, -50%) scaleX(var(--leg-flip, 1));
-  transform-origin: 50% 15%;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.player-leg--right {
-  left: var(--leg-right-x);
-}
-
-.player-leg--left {
-  left: var(--leg-left-x);
-  --leg-flip: -1;
-}
-
-.player.is-moving .player-sprite {
-  animation: playerSquash 0.35s ease-in-out infinite;
-}
-
-.player.is-moving .player-leg--left {
-  animation-delay: 0.18s;
-}
-
-.player.is-moving .player-leg {
-  animation: playerLegStep 0.36s ease-in-out infinite;
-}
-
-.player-weapon {
-  position: absolute;
-  width: var(--weapon-size);
-  height: auto;
-  transform: translate(-50%, -50%) rotate(var(--weapon-rotation, 0deg));
-  transform-origin: 20% 50%;
-  pointer-events: none;
-  z-index: 5;
-}
-
-.player-weapon--right {
-  left: var(--weapon-right-x);
-  top: var(--weapon-right-y);
-}
-
-.player-weapon--left {
-  left: var(--weapon-left-x);
-  top: var(--weapon-left-y);
-  transform-origin: 80% 50%;
 }
 
 .mob {
@@ -280,11 +126,6 @@ body.is-game .stage {
   z-index: 4;
 }
 
-.damage-number--player {
-  color: #e03a2e;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
-}
-
 .map-item {
   position: absolute;
   width: 28px;
@@ -335,25 +176,5 @@ body.is-game .stage {
   }
   50% {
     transform: scaleX(0.95) scaleY(1.05);
-  }
-}
-
-@keyframes playerSquash {
-  0%,
-  100% {
-    transform: translate(-50%, -50%) scale(1.02, 0.98);
-  }
-  50% {
-    transform: translate(-50%, -50%) scale(0.98, 1.02);
-  }
-}
-
-@keyframes playerLegStep {
-  0%,
-  100% {
-    transform: translate(-50%, -50%) scaleX(var(--leg-flip, 1)) rotate(10deg) translateY(1px);
-  }
-  50% {
-    transform: translate(-50%, -50%) scaleX(var(--leg-flip, 1)) rotate(-10deg) translateY(-2px);
   }
 }
