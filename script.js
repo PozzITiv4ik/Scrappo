@@ -64,6 +64,14 @@ const showPanel = (panelName) => {
     panel.classList.toggle("panel--active", isActive);
     panel.setAttribute("aria-hidden", String(!isActive));
   });
+
+  const isGame = panelName === "game";
+  document.body.classList.toggle("is-game", isGame);
+  document.documentElement.classList.toggle("is-game", isGame);
+
+  if (!isGame && mapApi && typeof mapApi.stop === "function") {
+    mapApi.stop();
+  }
 };
 
 const startGame = () => {

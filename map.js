@@ -1,9 +1,9 @@
 (() => {
   const CONFIG = {
-    mapSize: 1600,
+    mapSize: 1400,
     playerSize: 52,
-    itemSize: 34,
-    itemCount: 18,
+    itemSize: 28,
+    itemCount: 14,
     speed: 240
   };
 

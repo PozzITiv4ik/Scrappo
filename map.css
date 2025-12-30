@@ -1,0 +1,67 @@
+html.is-game,
+body.is-game {
+  overflow: hidden;
+}
+
+body.is-game {
+  background: #505d5c;
+}
+
+body.is-game .parallax-bg,
+body.is-game .parallax-overlay {
+  opacity: 0;
+  visibility: hidden;
+}
+
+body.is-game .stage {
+  padding: 0;
+}
+
+.panel--game {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  padding: 0;
+  place-items: stretch;
+  border-radius: 0;
+}
+
+.game-frame {
+  width: 100%;
+  height: 100%;
+  background: #505d5c;
+  overflow: hidden;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.game-world {
+  position: absolute;
+  inset: 0;
+  background: #505d5c;
+  border: 4px solid #000;
+  box-sizing: border-box;
+  transform: translate3d(0, 0, 0);
+}
+
+.player {
+  position: absolute;
+  width: 52px;
+  height: 52px;
+  image-rendering: auto;
+  transform: translate3d(0, 0, 0);
+  pointer-events: none;
+}
+
+.map-item {
+  position: absolute;
+  width: 28px;
+  height: auto;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
