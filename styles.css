@@ -116,12 +116,6 @@ body::after {
   text-shadow: 0 0 24px rgba(214, 178, 94, 0.4);
 }
 
-.tagline {
-  max-width: 520px;
-  margin: 0;
-  font-size: clamp(0.95rem, 1.4vw, 1.1rem);
-  color: var(--muted);
-}
 
 .panel-shell {
   display: grid;
@@ -228,13 +222,6 @@ body::after {
   transform: none;
 }
 
-.note {
-  margin: 0;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.1rem;
-  font-size: 0.8rem;
-}
 
 .setting-group {
   display: grid;
@@ -268,23 +255,6 @@ body::after {
   justify-self: start;
 }
 
-.footer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-}
-
-.footer-chip {
-  border: 1px solid rgba(214, 178, 94, 0.3);
-  border-radius: 999px;
-  padding: 6px 14px;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12rem;
-  color: var(--muted);
-  background: rgba(10, 14, 12, 0.7);
-}
 
 @keyframes rise {
   to {

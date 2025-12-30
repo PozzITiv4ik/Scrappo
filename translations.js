@@ -1,8 +1,6 @@
 window.SCRAPPO_I18N = {
   en: {
     "meta.title": "Scrappo",
-    "meta.tagline": "A fast roguelike survival run, built from scrap and grit.",
-    "meta.note": "Prototype build",
     "meta.version": "v0.0.1",
     "meta.mode": "Menu Prototype",
     "menu.title": "Main Menu",
@@ -17,8 +15,6 @@ window.SCRAPPO_I18N = {
   },
   ru: {
     "meta.title": "Scrappo",
-    "meta.tagline": "Быстрый рогалик на выживание, собранный из хлама и упрямства.",
-    "meta.note": "Прототип сборки",
     "meta.version": "v0.0.1",
     "meta.mode": "Прототип меню",
     "menu.title": "Главное меню",
