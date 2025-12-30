@@ -4,7 +4,8 @@
     playerSize: 52,
     itemSize: 28,
     itemCount: 14,
-    speed: 240
+    speed: 240,
+    zoom: 1.3
   };
 
   const PLANT_PATHS = [
@@ -69,20 +70,23 @@
 
     const viewWidth = frame.clientWidth;
     const viewHeight = frame.clientHeight;
+    const zoom = CONFIG.zoom;
     const halfW = viewWidth / 2;
     const halfH = viewHeight / 2;
+    const viewHalfW = halfW / zoom;
+    const viewHalfH = halfH / zoom;
 
-    const minX = halfW;
-    const maxX = CONFIG.mapSize - halfW;
-    const minY = halfH;
-    const maxY = CONFIG.mapSize - halfH;
+    const minX = viewHalfW;
+    const maxX = CONFIG.mapSize - viewHalfW;
+    const minY = viewHalfH;
+    const maxY = CONFIG.mapSize - viewHalfH;
 
     const camX = minX > maxX ? CONFIG.mapSize / 2 : clamp(playerPos.x, minX, maxX);
     const camY = minY > maxY ? CONFIG.mapSize / 2 : clamp(playerPos.y, minY, maxY);
 
-    const offsetX = halfW - camX;
-    const offsetY = halfH - camY;
-    world.style.transform = `translate3d(${offsetX}px, ${offsetY}px, 0)`;
+    const offsetX = halfW - camX * zoom;
+    const offsetY = halfH - camY * zoom;
+    world.style.transform = `translate3d(${offsetX}px, ${offsetY}px, 0) scale(${zoom})`;
     updatePlayer();
   };
 
