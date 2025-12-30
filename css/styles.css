@@ -6,18 +6,6 @@
   font-display: swap;
 }
 
-:root {
-  --red: #e03a2e;
-  --red-dark: #b71f16;
-  --red-glow: rgba(224, 58, 46, 0.18);
-  --white: #f8f6f1;
-  --white-strong: #ffffff;
-  --panel: rgba(248, 246, 241, 0.92);
-  --panel-border: rgba(224, 58, 46, 0.85);
-  --ink: #1a1a1a;
-  --shadow: rgba(0, 0, 0, 0.45);
-}
-
 * {
   box-sizing: border-box;
   font-family: "Blast", "Arial Black", sans-serif;
@@ -32,7 +20,7 @@ body {
   margin: 0;
   font-family: "Blast", "Arial Black", sans-serif;
   color: var(--ink);
-  background: #0b0b0b;
+  background: var(--black-deep);
 }
 
 .stage {
@@ -61,8 +49,8 @@ body {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 50% 48%, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.08) 50%, rgba(0, 0, 0, 0.75) 100%),
-    linear-gradient(120deg, rgba(224, 58, 46, 0.32), rgba(255, 255, 255, 0.05));
+    radial-gradient(circle at 50% 48%, var(--white-55), var(--white-08) 50%, var(--black-75) 100%),
+    linear-gradient(120deg, var(--red-32), var(--white-05));
   pointer-events: none;
 }
 
@@ -100,8 +88,8 @@ body {
 
 .panel--menu {
   justify-items: center;
-  background: transparent;
-  border-color: transparent;
+  background: var(--transparent);
+  border-color: var(--transparent);
   box-shadow: none;
   backdrop-filter: none;
 }
@@ -116,7 +104,7 @@ body {
   height: auto;
   display: block;
   margin: 0 auto 6px;
-  filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.45));
+  filter: drop-shadow(0 14px 18px var(--black-45));
 }
 
 .panel-title {
@@ -162,7 +150,7 @@ body {
   position: relative;
   overflow: hidden;
   transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease, color 160ms ease, border-color 160ms ease;
-  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 12px 26px var(--black-30);
 }
 
 .menu-button::after,
@@ -171,7 +159,7 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(120deg, transparent, var(--red-glow), transparent);
+  background: linear-gradient(120deg, var(--transparent), var(--red-glow), var(--transparent));
   opacity: 0;
   transition: opacity 180ms ease;
 }
@@ -183,7 +171,7 @@ body {
   border-color: var(--red-dark);
   background: var(--red);
   color: var(--white-strong);
-  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 16px 30px var(--black-35);
 }
 
 .menu-button:hover::after,
@@ -195,16 +183,16 @@ body {
 .menu-button.is-locked {
   opacity: 0.65;
   cursor: not-allowed;
-  border-color: rgba(183, 31, 22, 0.35);
-  background: rgba(248, 246, 241, 0.85);
-  color: rgba(120, 110, 110, 0.8);
+  border-color: var(--red-dark-35);
+  background: var(--white-85);
+  color: var(--muted-80);
   box-shadow: none;
 }
 
 .menu-button.is-locked:hover {
   transform: none;
-  background: rgba(248, 246, 241, 0.85);
-  color: rgba(120, 110, 110, 0.8);
+  background: var(--white-85);
+  color: var(--muted-80);
 }
 
 .setting-group {
@@ -245,8 +233,8 @@ body {
   height: 10px;
   border-radius: 999px;
   border: 2px solid var(--red);
-  background: rgba(224, 58, 46, 0.2);
-  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.2);
+  background: var(--red-20);
+  box-shadow: inset 0 0 8px var(--black-20);
 }
 
 .volume-slider::-webkit-slider-thumb {
@@ -256,7 +244,7 @@ body {
   border-radius: 50%;
   background: var(--red);
   border: 2px solid var(--white-strong);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 6px 12px var(--black-35);
 }
 
 .volume-slider::-moz-range-thumb {
@@ -265,14 +253,14 @@ body {
   border-radius: 50%;
   background: var(--red);
   border: 2px solid var(--white-strong);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 6px 12px var(--black-35);
 }
 
 .volume-slider::-moz-range-track {
   height: 10px;
   border-radius: 999px;
   border: 2px solid var(--red);
-  background: rgba(224, 58, 46, 0.2);
+  background: var(--red-20);
 }
 
 .lang-button {
@@ -284,7 +272,7 @@ body {
   border-color: var(--red-dark);
   background: var(--red);
   color: var(--white-strong);
-  box-shadow: 0 0 0 3px rgba(224, 58, 46, 0.2);
+  box-shadow: 0 0 0 3px var(--red-20);
 }
 
 .back-button {
