@@ -6,12 +6,48 @@
 
   const { config, playerConfig, playerPos, state } = internal;
 
+  const getKeyToken = (event) => {
+    switch (event.code) {
+      case "KeyW":
+        return "w";
+      case "KeyA":
+        return "a";
+      case "KeyS":
+        return "s";
+      case "KeyD":
+        return "d";
+      case "ArrowUp":
+        return "arrowup";
+      case "ArrowDown":
+        return "arrowdown";
+      case "ArrowLeft":
+        return "arrowleft";
+      case "ArrowRight":
+        return "arrowright";
+      default:
+        break;
+    }
+
+    if (typeof event.key === "string") {
+      const key = event.key.toLowerCase();
+      if (key.startsWith("arrow")) {
+        return key;
+      }
+      return key;
+    }
+
+    return "";
+  };
+
   const handleKeyDown = (event) => {
     if (!state.active) {
       return;
     }
 
-    const key = event.key.toLowerCase();
+    const key = getKeyToken(event);
+    if (!key) {
+      return;
+    }
     if (key.startsWith("arrow")) {
       event.preventDefault();
     }
@@ -23,7 +59,10 @@
       return;
     }
 
-    const key = event.key.toLowerCase();
+    const key = getKeyToken(event);
+    if (!key) {
+      return;
+    }
     state.keys.delete(key);
   };
 
