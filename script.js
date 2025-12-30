@@ -55,7 +55,18 @@ const applyTranslations = (lang) => {
   document.querySelectorAll("[data-i18n]").forEach((element) => {
     const key = element.getAttribute("data-i18n");
     const value = dictionary[key];
-    if (value) {
+    if (!value) {
+      return;
+    }
+
+    const attrName = element.getAttribute("data-i18n-attr");
+    const allowText = element.getAttribute("data-i18n-text");
+
+    if (attrName) {
+      element.setAttribute(attrName, value);
+    }
+
+    if (allowText !== "false") {
       element.textContent = value;
     }
   });

@@ -3,22 +3,20 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title data-i18n="meta.title">Scrappo</title>
+    <title data-i18n="meta.title"></title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div class="scene">
       <header class="hero">
         <div class="sigil" aria-hidden="true"></div>
-        <h1 class="title" data-i18n="meta.title">Scrappo</h1>
-        <p class="tagline" data-i18n="meta.tagline">
-          A fast roguelike survival run, built from scrap and grit.
-        </p>
+        <h1 class="title" data-i18n="meta.title"></h1>
+        <p class="tagline" data-i18n="meta.tagline"></p>
       </header>
 
       <main class="panel-shell">
         <section class="panel panel--active" data-panel="main">
-          <h2 class="panel-title" data-i18n="menu.title">Main Menu</h2>
+          <h2 class="panel-title" data-i18n="menu.title"></h2>
           <div class="menu">
             <button
               class="menu-button is-locked"
@@ -29,7 +27,6 @@
               style="--delay: 0ms"
               data-i18n="menu.play"
             >
-              Play
             </button>
             <button
               class="menu-button"
@@ -38,7 +35,6 @@
               style="--delay: 120ms"
               data-i18n="menu.settings"
             >
-              Settings
             </button>
             <button
               class="menu-button is-locked"
@@ -49,34 +45,33 @@
               style="--delay: 240ms"
               data-i18n="menu.exit"
             >
-              Exit
             </button>
           </div>
-          <p class="note" data-i18n="meta.note">Prototype build</p>
+          <p class="note" data-i18n="meta.note"></p>
         </section>
 
         <section class="panel" data-panel="settings" aria-hidden="true">
-          <h2 class="panel-title" data-i18n="settings.title">Settings</h2>
+          <h2 class="panel-title" data-i18n="settings.title"></h2>
           <div class="setting-group">
-            <span class="setting-label" data-i18n="settings.language">Language</span>
-            <div class="language-options" role="group" aria-label="Language">
-              <button class="lang-button" type="button" data-lang="en" data-i18n="lang.english">
-                English
-              </button>
-              <button class="lang-button" type="button" data-lang="ru" data-i18n="lang.russian">
-                Russian
-              </button>
+            <span class="setting-label" data-i18n="settings.language"></span>
+            <div
+              class="language-options"
+              role="group"
+              data-i18n="settings.language"
+              data-i18n-attr="aria-label"
+              data-i18n-text="false"
+            >
+              <button class="lang-button" type="button" data-lang="en" data-i18n="lang.english"></button>
+              <button class="lang-button" type="button" data-lang="ru" data-i18n="lang.russian"></button>
             </div>
           </div>
-          <button class="back-button" type="button" data-action="back" data-i18n="settings.back">
-            Back
-          </button>
+          <button class="back-button" type="button" data-action="back" data-i18n="settings.back"></button>
         </section>
       </main>
 
       <footer class="footer">
-        <span class="footer-chip" data-i18n="meta.version">v0.0.1</span>
-        <span class="footer-chip" data-i18n="meta.mode">Menu Prototype</span>
+        <span class="footer-chip" data-i18n="meta.version"></span>
+        <span class="footer-chip" data-i18n="meta.mode"></span>
       </footer>
     </div>
 
