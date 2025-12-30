@@ -39,7 +39,6 @@
     const mapSize = typeof mapApi.getMapSize === "function" ? mapApi.getMapSize() : 0;
     const playerPos = typeof mapApi.getPlayerPosition === "function" ? mapApi.getPlayerPosition() : null;
     const playerSize = typeof mapApi.getPlayerSize === "function" ? mapApi.getPlayerSize() : 52;
-    const zoom = typeof mapApi.getZoom === "function" ? mapApi.getZoom() : 1;
 
     if (!mapSize || !playerPos) {
       return false;
@@ -47,34 +46,6 @@
 
     const padding = mob.size ? mob.size / 2 + 8 : 16;
     const safeRadius = Math.max(SPAWN_SAFE_RADIUS, playerSize * 2.4);
-    const frame = document.querySelector(".game-frame");
-    const viewHalfW = frame ? frame.clientWidth / (2 * zoom) : 0;
-    const viewHalfH = frame ? frame.clientHeight / (2 * zoom) : 0;
-    const maxRadius = Math.max(safeRadius + 40, Math.min(viewHalfW, viewHalfH) * 0.9);
-
-    const trySpawnNearPlayer = () => {
-      if (!frame || maxRadius <= safeRadius) {
-        return null;
-      }
-
-      for (let attempt = 0; attempt < MAX_SPAWN_ATTEMPTS; attempt += 1) {
-        const angle = Math.random() * Math.PI * 2;
-        const radius = safeRadius + Math.random() * (maxRadius - safeRadius);
-        const x = playerPos.x + Math.cos(angle) * radius;
-        const y = playerPos.y + Math.sin(angle) * radius;
-        if (x >= padding && x <= mapSize - padding && y >= padding && y <= mapSize - padding) {
-          return { x, y };
-        }
-      }
-
-      return null;
-    };
-
-    const nearPlayer = trySpawnNearPlayer();
-    if (nearPlayer) {
-      mapApi.spawnMob(mob, nearPlayer);
-      return true;
-    }
 
     for (let attempt = 0; attempt < MAX_SPAWN_ATTEMPTS; attempt += 1) {
       const x = padding + Math.random() * (mapSize - padding * 2);

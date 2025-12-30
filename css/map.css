@@ -110,6 +110,7 @@ body.is-game .stage {
   height: 100%;
   display: block;
   pointer-events: none;
+  animation: mobSquash 0.4s ease-in-out infinite;
 }
 
 .mob-hp {
@@ -169,5 +170,15 @@ body.is-game .stage {
   100% {
     opacity: 0;
     transform: translate(-50%, -80%);
+  }
+}
+
+@keyframes mobSquash {
+  0%,
+  100% {
+    transform: scaleX(1.05) scaleY(0.95);
+  }
+  50% {
+    transform: scaleX(0.95) scaleY(1.05);
   }
 }
