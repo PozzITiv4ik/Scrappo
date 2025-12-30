@@ -229,7 +229,7 @@
       const name = dictionary[character.nameKey] || character.id;
       const button = document.createElement("button");
       button.type = "button";
-      button.className = "character-icon";
+      button.className = "character-icon ui-tile ui-tile--interactive";
       button.dataset.characterId = character.id;
       button.setAttribute("aria-label", name);
       if (character.id === selectedCharacterId) {

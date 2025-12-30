@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title data-i18n="meta.title"></title>
     <link rel="stylesheet" href="css/colors.css" />
+    <link rel="stylesheet" href="css/ui.css" />
     <link rel="stylesheet" href="css/styles.css" />
     <link rel="stylesheet" href="css/characters.css" />
     <link rel="stylesheet" href="css/map.css" />
@@ -28,7 +29,7 @@
             />
             <div class="menu">
               <button
-                class="menu-button"
+                class="menu-button ui-button"
                 type="button"
                 data-action="play"
                 style="--delay: 0ms"
@@ -36,7 +37,7 @@
               >
               </button>
               <button
-                class="menu-button"
+                class="menu-button ui-button"
                 type="button"
                 data-action="settings"
                 style="--delay: 120ms"
@@ -44,7 +45,7 @@
               >
               </button>
               <button
-                class="menu-button is-locked"
+                class="menu-button ui-button is-locked"
                 type="button"
                 data-action="exit"
                 data-disabled="true"
@@ -57,28 +58,28 @@
           </section>
 
           <section class="panel panel--settings" data-panel="settings" aria-hidden="true">
-            <div class="overlay-card settings-shell">
-              <h2 class="panel-title" data-i18n="settings.title"></h2>
+            <div class="overlay-card settings-shell ui-card ui-card--panel ui-shadow-strong">
+              <h2 class="panel-title ui-title" data-i18n="settings.title"></h2>
               <div class="setting-group">
-                <span class="setting-label" data-i18n="settings.language"></span>
+                <span class="setting-label ui-label" data-i18n="settings.language"></span>
                 <div
-                  class="language-options"
+                  class="language-options ui-row"
                   role="group"
                   data-i18n="settings.language"
                   data-i18n-attr="aria-label"
                   data-i18n-text="false"
                 >
-                  <button class="lang-button" type="button" data-lang="en" data-i18n="lang.english"></button>
-                  <button class="lang-button" type="button" data-lang="ru" data-i18n="lang.russian"></button>
+                  <button class="lang-button ui-button" type="button" data-lang="en" data-i18n="lang.english"></button>
+                  <button class="lang-button ui-button" type="button" data-lang="ru" data-i18n="lang.russian"></button>
                 </div>
               </div>
               <div class="setting-group">
-                <div class="setting-row">
-                  <span class="setting-label" data-i18n="settings.volume"></span>
+                <div class="setting-row ui-row ui-row--between">
+                  <span class="setting-label ui-label" data-i18n="settings.volume"></span>
                   <span class="setting-value" data-volume-value></span>
                 </div>
                 <input
-                  class="volume-slider"
+                  class="volume-slider ui-range"
                   type="range"
                   min="0"
                   max="100"
@@ -90,67 +91,77 @@
                   data-i18n-text="false"
                 />
               </div>
-              <button class="back-button" type="button" data-action="back" data-i18n="settings.back"></button>
+              <button
+                class="back-button ui-button"
+                type="button"
+                data-action="back"
+                data-i18n="settings.back"
+              ></button>
             </div>
           </section>
           <section class="panel panel--characters" data-panel="characters" aria-hidden="true">
             <div class="character-shell">
               <header class="character-header">
-                <h2 class="panel-title character-title" data-i18n="characters.title"></h2>
-                <p class="character-subtitle" data-i18n="characters.subtitle"></p>
+                <h2 class="panel-title character-title ui-title" data-i18n="characters.title"></h2>
+                <p class="character-subtitle ui-subtitle" data-i18n="characters.subtitle"></p>
               </header>
               <div class="character-spotlight">
                 <h3 class="character-spotlight__name" data-character-name></h3>
                 <div class="character-spotlight__content">
                   <div class="character-preview">
-                    <div class="character-preview__frame">
+                    <div class="character-preview__frame ui-tile">
                       <img class="character-preview__img" src="" alt="" data-character-portrait />
                     </div>
-                    <div class="character-preview__weapon">
-                      <span class="character-weapon-label" data-i18n="characters.weapon"></span>
+                    <div class="character-preview__weapon ui-tile ui-row">
+                      <span class="character-weapon-label ui-text-muted" data-i18n="characters.weapon"></span>
                       <img class="character-weapon-icon" src="" alt="" data-character-weapon />
                     </div>
                   </div>
                   <div class="character-details">
-                    <p class="character-details__desc" data-character-desc></p>
+                    <p class="character-details__desc ui-text-muted" data-character-desc></p>
                     <ul class="character-traits" data-character-traits></ul>
                   </div>
                 </div>
               </div>
               <div class="character-grid" data-character-grid></div>
               <div class="character-actions">
-                <button class="back-button" type="button" data-action="back" data-i18n="settings.back"></button>
+                <button
+                  class="back-button ui-button"
+                  type="button"
+                  data-action="back"
+                  data-i18n="settings.back"
+                ></button>
               </div>
             </div>
           </section>
           <section class="panel panel--game" data-panel="game" aria-hidden="true">
-            <div class="wave-timer" data-wave-timer aria-live="polite"></div>
-            <div class="player-hp" data-player-hp>
-              <div class="player-hp-bar" data-player-hp-bar></div>
-              <div class="player-hp-text" data-player-hp-text></div>
+            <div class="wave-timer ui-chip ui-chip--light" data-wave-timer aria-live="polite"></div>
+            <div class="player-hp ui-meter" data-player-hp>
+              <div class="player-hp-bar ui-meter__bar ui-meter__bar--accent" data-player-hp-bar></div>
+              <div class="player-hp-text ui-meter__text" data-player-hp-text></div>
             </div>
-            <div class="player-xp" data-player-xp>
-              <div class="player-xp-bar" data-player-xp-bar></div>
-              <div class="player-xp-text" data-player-xp-text></div>
+            <div class="player-xp ui-meter" data-player-xp>
+              <div class="player-xp-bar ui-meter__bar ui-meter__bar--light" data-player-xp-bar></div>
+              <div class="player-xp-text ui-meter__text" data-player-xp-text></div>
             </div>
-            <div class="player-gold" data-player-gold>
+            <div class="player-gold ui-row" data-player-gold>
               <img class="player-gold-icon" src="icons/gold.png" alt="" />
-              <div class="player-gold-text" data-player-gold-text></div>
+              <div class="player-gold-text ui-text-strong" data-player-gold-text></div>
             </div>
             <div class="game-overlay ability-overlay" data-overlay="abilities" aria-hidden="true">
-              <div class="overlay-card overlay-card--wide">
-                <h2 class="overlay-title" data-i18n="abilities.title"></h2>
-                <p class="overlay-subtitle" data-abilities-subtitle></p>
+              <div class="overlay-card overlay-card--wide ui-card ui-card--panel ui-shadow-strong">
+                <h2 class="overlay-title ui-title" data-i18n="abilities.title"></h2>
+                <p class="overlay-subtitle ui-subtitle" data-abilities-subtitle></p>
                 <div class="ability-choices" data-ability-choices></div>
               </div>
             </div>
             <div class="game-overlay inventory-overlay" data-overlay="inventory" aria-hidden="true">
               <div class="inventory-layout">
-                <div class="overlay-card overlay-card--wide inventory-main">
+                <div class="overlay-card overlay-card--wide inventory-main ui-card ui-card--panel ui-shadow-strong">
                   <div class="overlay-header">
-                    <h2 class="overlay-title" data-i18n="inventory.title"></h2>
+                    <h2 class="overlay-title ui-title" data-i18n="inventory.title"></h2>
                     <button
-                      class="overlay-close"
+                      class="overlay-close ui-button ui-button--small"
                       type="button"
                       data-action="inventory-close"
                       data-i18n="inventory.close"
@@ -158,32 +169,47 @@
                   </div>
                   <div class="inventory-columns">
                     <div class="inventory-section">
-                      <h3 class="overlay-subtitle" data-i18n="inventory.abilities"></h3>
+                      <h3 class="overlay-subtitle ui-subtitle" data-i18n="inventory.abilities"></h3>
                       <div class="ability-grid" data-inventory-abilities></div>
                     </div>
                   </div>
                   <div class="overlay-actions">
                     <button
-                      class="overlay-button"
+                      class="overlay-button ui-button"
                       type="button"
                       data-action="inventory-continue"
                       data-i18n="inventory.continue"
                     ></button>
                   </div>
                 </div>
-                <div class="overlay-card inventory-stats-card">
-                  <h3 class="overlay-subtitle" data-i18n="inventory.stats"></h3>
+                <div class="overlay-card inventory-stats-card ui-card ui-card--dark ui-shadow-strong">
+                  <h3 class="overlay-subtitle ui-subtitle" data-i18n="inventory.stats"></h3>
                   <div class="stats-list" data-inventory-stats></div>
                 </div>
               </div>
             </div>
             <div class="game-overlay pause-overlay" data-overlay="pause" aria-hidden="true">
-              <div class="overlay-card">
-                <h2 class="overlay-title" data-i18n="pause.title"></h2>
+              <div class="overlay-card ui-card ui-card--panel ui-shadow-strong">
+                <h2 class="overlay-title ui-title" data-i18n="pause.title"></h2>
                 <div class="overlay-actions">
-                  <button class="overlay-button" type="button" data-action="pause-resume" data-i18n="pause.resume"></button>
-                  <button class="overlay-button" type="button" data-action="pause-inventory" data-i18n="pause.inventory"></button>
-                  <button class="overlay-button" type="button" data-action="pause-exit" data-i18n="pause.exit"></button>
+                  <button
+                    class="overlay-button ui-button"
+                    type="button"
+                    data-action="pause-resume"
+                    data-i18n="pause.resume"
+                  ></button>
+                  <button
+                    class="overlay-button ui-button"
+                    type="button"
+                    data-action="pause-inventory"
+                    data-i18n="pause.inventory"
+                  ></button>
+                  <button
+                    class="overlay-button ui-button"
+                    type="button"
+                    data-action="pause-exit"
+                    data-i18n="pause.exit"
+                  ></button>
                 </div>
               </div>
             </div>

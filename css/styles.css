@@ -78,8 +78,8 @@ body {
   place-items: center;
   align-content: center;
   padding: clamp(18px, 4vw, 64px);
-  gap: 20px;
-  background: var(--panel);
+  gap: var(--ui-space-5);
+  background: var(--ui-panel-bg);
   backdrop-filter: blur(6px);
 }
 
@@ -101,7 +101,7 @@ body {
   align-content: center;
   justify-items: center;
   text-align: center;
-  background: linear-gradient(180deg, var(--coal-70), var(--coal-92));
+  background: var(--ui-overlay-bg);
   backdrop-filter: blur(2px);
 }
 
@@ -127,41 +127,15 @@ body {
 }
 
 .panel-title {
-  margin: 0;
+  text-align: center;
   font-size: clamp(1.6rem, 3vw, 2.4rem);
   letter-spacing: 0.24rem;
-  text-transform: uppercase;
-  color: var(--accent);
-  text-align: center;
 }
 
 .menu {
   display: grid;
   gap: 14px;
   width: min(320px, 84vw);
-}
-
-.menu-button,
-.back-button,
-.lang-button {
-  font-size: 1.05rem;
-  letter-spacing: 0.2rem;
-  text-transform: uppercase;
-  border-radius: 12px;
-  border: 2px solid var(--outline);
-  background: var(--surface);
-  color: var(--text-strong);
-  padding: 12px 18px;
-  cursor: pointer;
-  transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
-}
-
-.menu-button:hover,
-.back-button:hover,
-.lang-button:hover {
-  transform: translateY(-1px);
-  border-color: var(--accent);
-  background: var(--surface-strong);
 }
 
 .menu-button.is-locked {
@@ -180,21 +154,11 @@ body {
 
 .setting-group {
   display: grid;
-  gap: 12px;
+  gap: var(--ui-space-3);
 }
 
 .setting-label {
-  color: var(--text-muted);
-  text-transform: uppercase;
   letter-spacing: 0.16rem;
-  font-size: 0.95rem;
-}
-
-.setting-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
 }
 
 .setting-value {
@@ -204,42 +168,7 @@ body {
 }
 
 .language-options {
-  display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-}
-
-.volume-slider {
-  width: 100%;
-  appearance: none;
-  height: 10px;
-  border-radius: 999px;
-  border: 2px solid var(--outline);
-  background: var(--surface-soft);
-}
-
-.volume-slider::-webkit-slider-thumb {
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--accent);
-  border: 2px solid var(--coal-85);
-}
-
-.volume-slider::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--accent);
-  border: 2px solid var(--coal-85);
-}
-
-.volume-slider::-moz-range-track {
-  height: 10px;
-  border-radius: 999px;
-  border: 2px solid var(--outline);
-  background: var(--surface-soft);
 }
 
 .lang-button {

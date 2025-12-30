@@ -93,7 +93,7 @@
 
     if (!state.inventory.size) {
       const empty = document.createElement("div");
-      empty.className = "ability-item";
+      empty.className = "ability-item ui-tile ui-text-strong";
       empty.textContent = t("inventory.empty", "Empty");
       dom.inventoryAbilitiesEl.appendChild(empty);
     } else {
@@ -103,7 +103,7 @@
           return;
         }
         const item = document.createElement("div");
-        item.className = "ability-item";
+        item.className = "ability-item ui-tile ui-text-strong";
         item.textContent = getAbilityText(ability, "name");
         item.title = getAbilityText(ability, "description");
         if (count > 1) {
@@ -130,7 +130,7 @@
 
     rows.forEach((row) => {
       const line = document.createElement("div");
-      line.className = "stats-row";
+      line.className = "stats-row ui-row ui-row--between";
       const label = document.createElement("span");
       label.textContent = t(row.key, row.key);
       const value = document.createElement("span");
@@ -152,16 +152,16 @@
     choices.forEach((ability) => {
       const card = document.createElement("button");
       card.type = "button";
-      card.className = "ability-card";
+      card.className = "ability-card ui-tile ui-tile--interactive";
       card.dataset.abilityId = ability.id;
       const rarity = document.createElement("div");
-      rarity.className = `ability-card__rarity ability-card__rarity--${ability.rarity}`;
+      rarity.className = `ability-card__rarity ui-pill ability-card__rarity--${ability.rarity}`;
       rarity.textContent = getRarityLabel(ability.rarity);
       const name = document.createElement("div");
-      name.className = "ability-card__name";
+      name.className = "ability-card__name ui-text-strong";
       name.textContent = getAbilityText(ability, "name");
       const desc = document.createElement("div");
-      desc.className = "ability-card__desc";
+      desc.className = "ability-card__desc ui-text-muted";
       desc.textContent = getAbilityText(ability, "description");
       card.appendChild(rarity);
       card.appendChild(name);

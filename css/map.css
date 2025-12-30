@@ -43,14 +43,7 @@ body.is-game .stage {
   left: 50%;
   transform: translateX(-50%);
   z-index: 5;
-  padding: 8px 18px;
-  border-radius: 999px;
-  border: 2px solid var(--white-strong);
-  background: var(--black-55);
-  color: var(--white-strong);
   font-size: clamp(1.1rem, 2vw, 1.6rem);
-  letter-spacing: 0.2rem;
-  text-transform: uppercase;
   pointer-events: none;
 }
 
