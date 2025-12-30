@@ -149,6 +149,9 @@
 
   const shoot = (weapon, target, now) => {
     if (createBullet(weapon, target)) {
+      if (window.SCRAPPO_SOUND && typeof window.SCRAPPO_SOUND.playShot === "function") {
+        window.SCRAPPO_SOUND.playShot();
+      }
       lastShotAt = now;
     }
   };
@@ -198,6 +201,9 @@
         const dist = Math.hypot(dx, dy);
         if (dist <= mobRadius + bulletRadius) {
           const result = mapApi.applyDamage(mob.id, bullet.damage);
+          if (window.SCRAPPO_SOUND && typeof window.SCRAPPO_SOUND.playHit === "function") {
+            window.SCRAPPO_SOUND.playHit();
+          }
           if (result && result.position) {
             spawnDamageNumber(result.position, bullet.damage);
           } else {
