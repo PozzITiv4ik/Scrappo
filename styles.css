@@ -1,4 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600&display=swap");
+@font-face {
+  font-family: "Blast";
+  src: url("icons/blast.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
   --red: #e03a2e;
@@ -23,7 +29,7 @@ body {
 
 body {
   margin: 0;
-  font-family: "Rajdhani", sans-serif;
+  font-family: "Blast", "Arial Black", sans-serif;
   color: var(--ink);
   background: #0b0b0b;
 }
@@ -91,6 +97,10 @@ body {
 
 .panel--menu {
   justify-items: center;
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
 }
 
 .logo {
@@ -103,7 +113,7 @@ body {
 
 .panel-title {
   margin: 0;
-  font-family: "Bebas Neue", "Rajdhani", sans-serif;
+  font-family: "Blast", "Arial Black", sans-serif;
   font-size: clamp(1.6rem, 2.8vw, 2.1rem);
   letter-spacing: 0.22rem;
   text-transform: uppercase;
@@ -120,7 +130,7 @@ body {
 .menu-button,
 .back-button,
 .lang-button {
-  font-family: "Bebas Neue", "Rajdhani", sans-serif;
+  font-family: "Blast", "Arial Black", sans-serif;
   font-size: 1.2rem;
   letter-spacing: 0.2rem;
   text-transform: uppercase;
@@ -134,13 +144,6 @@ body {
   overflow: hidden;
   transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease, color 160ms ease, border-color 160ms ease;
   box-shadow: 0 12px 26px rgba(0, 0, 0, 0.3);
-}
-
-.menu-button {
-  opacity: 0;
-  transform: translateY(12px);
-  animation: popIn 520ms ease forwards;
-  animation-delay: var(--delay);
 }
 
 .menu-button::after,
