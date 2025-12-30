@@ -246,7 +246,7 @@ body {
 }
 
 .back-button {
-  justify-self: start;
+  justify-self: center;
 }
 
 @keyframes fadeIn {
