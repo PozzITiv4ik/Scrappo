@@ -13,10 +13,28 @@
   const bullets = new Map();
 
   const getWeaponData = () => window.SCRAPPO_WEAPONS || {};
+  const getAbilityApi = () => window.SCRAPPO_ABILITY_SYSTEM;
+  const applyWeaponModifiers = (weapon) => {
+    const abilityApi = getAbilityApi();
+    if (!abilityApi || typeof abilityApi.getCombatModifiers !== "function") {
+      return weapon;
+    }
+    const mods = abilityApi.getCombatModifiers();
+    const damageMultiplier = typeof mods.damageMultiplier === "number" ? mods.damageMultiplier : 1;
+    const fireRateMultiplier = typeof mods.fireRateMultiplier === "number" ? mods.fireRateMultiplier : 1;
+    const damageFlat = typeof mods.damageFlat === "number" ? mods.damageFlat : 0;
+    const damage = Math.max(1, Math.round((weapon.damage + damageFlat) * damageMultiplier));
+    const fireRate = Math.max(0.1, weapon.fireRate * fireRateMultiplier);
+    return { ...weapon, damage, fireRate };
+  };
   const getWeaponForHand = (hand) => {
     const weapons = getWeaponData();
     const weaponId = weaponSlots[handSlots[hand]];
-    return weapons[weaponId];
+    const weapon = weapons[weaponId];
+    if (!weapon) {
+      return null;
+    }
+    return applyWeaponModifiers(weapon);
   };
 
   const getWeaponElement = (hand) => document.querySelector(`[data-weapon="${hand}"]`);
@@ -380,17 +398,37 @@
     rafId = requestAnimationFrame(tick);
   };
 
-  const stop = () => {
+  const pause = () => {
+    if (!running) {
+      return;
+    }
     running = false;
     if (rafId) {
       cancelAnimationFrame(rafId);
     }
     rafId = null;
+  };
+
+  const resume = () => {
+    if (running) {
+      return;
+    }
+    running = true;
+    lastTick = performance.now();
+    if (!rafId) {
+      rafId = requestAnimationFrame(tick);
+    }
+  };
+
+  const stop = () => {
+    pause();
     clearBullets();
   };
 
   window.SCRAPPO_WEAPON_SYSTEM = {
     start,
+    pause,
+    resume,
     stop,
     getSlots: () => weaponSlots.slice(),
     setActiveSlot: (index) => {

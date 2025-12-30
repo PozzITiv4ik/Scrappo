@@ -1,0 +1,214 @@
+.game-overlay {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 4vw, 36px);
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 10;
+}
+
+.game-overlay.is-active {
+  display: flex;
+}
+
+.overlay-card {
+  width: min(640px, 92vw);
+  background: var(--panel);
+  border: 2px solid var(--panel-border);
+  border-radius: 20px;
+  box-shadow: 0 24px 50px var(--shadow);
+  padding: clamp(18px, 3vw, 30px);
+  display: grid;
+  gap: 16px;
+  max-height: 90vh;
+  overflow: auto;
+}
+
+.overlay-card--wide {
+  width: min(980px, 92vw);
+}
+
+.overlay-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.overlay-title {
+  margin: 0;
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  letter-spacing: 0.2rem;
+  text-transform: uppercase;
+  color: var(--red);
+}
+
+.overlay-subtitle {
+  margin: 0;
+  font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+  color: var(--ink);
+  letter-spacing: 0.08rem;
+}
+
+.overlay-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.overlay-button,
+.overlay-close {
+  font-family: "Blast", "Arial Black", sans-serif;
+  font-size: 1.05rem;
+  letter-spacing: 0.2rem;
+  text-transform: uppercase;
+  border-radius: 14px;
+  border: 2px solid var(--red);
+  background: var(--white-strong);
+  color: var(--red);
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease, color 160ms ease, border-color 160ms ease;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.overlay-button:hover,
+.overlay-close:hover {
+  transform: translateY(-2px);
+  border-color: var(--red-dark);
+  background: var(--red);
+  color: var(--white-strong);
+  box-shadow: 0 14px 24px rgba(0, 0, 0, 0.35);
+}
+
+.overlay-close {
+  padding: 8px 12px;
+  font-size: 0.95rem;
+}
+
+.ability-choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.ability-card {
+  border-radius: 16px;
+  border: 2px solid rgba(26, 26, 26, 0.3);
+  background: rgba(255, 255, 255, 0.92);
+  padding: 14px;
+  text-align: left;
+  cursor: pointer;
+  display: grid;
+  gap: 8px;
+  min-height: 140px;
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.ability-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--red);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.25);
+}
+
+.ability-card__name {
+  font-size: 1.1rem;
+  letter-spacing: 0.14rem;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.ability-card__desc {
+  font-size: 0.95rem;
+  color: rgba(26, 26, 26, 0.75);
+  letter-spacing: 0.08rem;
+}
+
+.ability-card__rarity {
+  font-size: 0.85rem;
+  letter-spacing: 0.16rem;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 999px;
+  justify-self: start;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.ability-card__rarity--common {
+  color: #8b1a15;
+  border: 1px solid rgba(224, 58, 46, 0.6);
+}
+
+.ability-card__rarity--rare {
+  color: #1b4e7a;
+  border: 1px solid rgba(27, 78, 122, 0.6);
+}
+
+.inventory-columns {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) minmax(220px, 0.8fr);
+  gap: 18px;
+}
+
+.inventory-section {
+  display: grid;
+  gap: 10px;
+}
+
+.ability-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.ability-item {
+  position: relative;
+  border: 2px solid rgba(26, 26, 26, 0.25);
+  border-radius: 14px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  min-height: 90px;
+  display: grid;
+  align-content: center;
+  text-align: center;
+  font-size: 0.95rem;
+  letter-spacing: 0.08rem;
+}
+
+.ability-stack {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  background: var(--red);
+  color: var(--white-strong);
+  font-size: 0.8rem;
+  padding: 2px 6px;
+  border-radius: 999px;
+  letter-spacing: 0.08rem;
+}
+
+.stats-list {
+  display: grid;
+  gap: 8px;
+}
+
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.95rem;
+  letter-spacing: 0.08rem;
+  color: var(--ink);
+}
+
+.stats-value {
+  color: var(--red-dark);
+}
+
+@media (max-width: 720px) {
+  .inventory-columns {
+    grid-template-columns: 1fr;
+  }
+}

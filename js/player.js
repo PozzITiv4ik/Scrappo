@@ -23,7 +23,8 @@
     xp: 0,
     xpToNext: getXpForLevel(1),
     pickupRadius: config.pickupRadius,
-    collectRadius: config.collectRadius
+    collectRadius: config.collectRadius,
+    gold: 0
   };
 
   const resetState = () => {
@@ -35,6 +36,7 @@
     state.xpToNext = getXpForLevel(state.level);
     state.pickupRadius = config.pickupRadius;
     state.collectRadius = config.collectRadius;
+    state.gold = 0;
     return state;
   };
 

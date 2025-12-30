@@ -152,6 +152,32 @@
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
 }
 
+.player-gold {
+  position: absolute;
+  top: 78px;
+  left: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0;
+  background: transparent;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.player-gold-icon {
+  width: 75px;
+  height: 75px;
+  display: block;
+}
+
+.player-gold-text {
+  color: #ffffff;
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  letter-spacing: 0.08rem;
+  text-shadow: none;
+}
+
 .damage-number--player {
   color: #e03a2e;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);

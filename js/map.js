@@ -5,6 +5,7 @@
   }
   const playerConfig = playerApi.config;
   const playerState = playerApi.state;
+  const getAbilityApi = () => window.SCRAPPO_ABILITY_SYSTEM;
 
   const CONFIG = {
     mapSize: 1400,
@@ -14,7 +15,10 @@
     zoom: 2.5,
     xpOrbSize: 18,
     xpMinPieces: 3,
-    xpMaxPieces: 6
+    xpMaxPieces: 6,
+    goldOrbSize: 18,
+    goldMinPieces: 3,
+    goldMaxPieces: 6
   };
 
   const PLANT_PATHS = [
@@ -32,6 +36,12 @@
     "icons/experience.png"
   ];
 
+  const GOLD_SPRITES = [
+    "icons/gold.png",
+    "icons/gold.png",
+    "icons/gold.png"
+  ];
+
   let frame = null;
   let world = null;
   let player = null;
@@ -39,8 +49,10 @@
   let hpText = null;
   let xpBar = null;
   let xpText = null;
+  let goldText = null;
   let mobId = 0;
   let experienceId = 0;
+  let goldId = 0;
   let initialized = false;
   let active = false;
   let rafId = null;
@@ -49,6 +61,7 @@
   const keys = new Set();
   const mobs = new Map();
   const experienceDrops = new Map();
+  const goldDrops = new Map();
   if (!playerState.position) {
     playerState.position = { x: CONFIG.mapSize / 2, y: CONFIG.mapSize / 2 };
   }
@@ -56,6 +69,21 @@
 
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
   const getExperienceSprites = () => window.SCRAPPO_EXPERIENCE_SPRITES || EXPERIENCE_SPRITES;
+  const getPlayerStats = () => {
+    const abilityApi = getAbilityApi();
+    if (abilityApi && typeof abilityApi.getPlayerStats === "function") {
+      return abilityApi.getPlayerStats();
+    }
+    return {
+      maxHp: playerState.maxHp,
+      speed: playerConfig.speed,
+      pickupRadius: playerState.pickupRadius,
+      collectRadius: playerState.collectRadius,
+      xpGainMultiplier: 1,
+      goldGainMultiplier: 1
+    };
+  };
+  const getGoldSprites = () => window.SCRAPPO_GOLD_SPRITES || GOLD_SPRITES;
 
   const setupWorld = () => {
     world.style.width = `${CONFIG.mapSize}px`;
@@ -89,6 +117,14 @@
     return sprites[Math.floor(Math.random() * sprites.length)] || sprites[0];
   };
 
+  const getRandomGoldSprite = () => {
+    const sprites = getGoldSprites();
+    if (!sprites.length) {
+      return "icons/gold.png";
+    }
+    return sprites[Math.floor(Math.random() * sprites.length)] || sprites[0];
+  };
+
   const createExperienceDrop = (value, position) => {
     if (!world) {
       return null;
@@ -106,6 +142,32 @@
     orb.style.top = `${position.y}px`;
     world.appendChild(orb);
     experienceDrops.set(id, {
+      id,
+      el: orb,
+      x: position.x,
+      y: position.y,
+      value
+    });
+    return id;
+  };
+
+  const createGoldDrop = (value, position) => {
+    if (!world) {
+      return null;
+    }
+    goldId += 1;
+    const id = `gold-${goldId}`;
+    const orb = document.createElement("img");
+    orb.className = "gold-orb";
+    orb.src = getRandomGoldSprite();
+    orb.alt = "";
+    const size = CONFIG.goldOrbSize;
+    orb.style.width = `${size}px`;
+    orb.style.height = `${size}px`;
+    orb.style.left = `${position.x}px`;
+    orb.style.top = `${position.y}px`;
+    world.appendChild(orb);
+    goldDrops.set(id, {
       id,
       el: orb,
       x: position.x,
@@ -140,10 +202,41 @@
     }
   };
 
+  const spawnGoldDrops = (amount, position) => {
+    const total = Math.max(0, Math.round(amount));
+    if (!total || !position) {
+      return;
+    }
+    const maxPieces = Math.max(1, CONFIG.goldMaxPieces);
+    const minPieces = Math.max(1, CONFIG.goldMinPieces);
+    const desiredPieces = Math.max(minPieces, Math.round(total / 6));
+    const pieces = Math.min(maxPieces, desiredPieces, total);
+    const baseValue = Math.floor(total / pieces);
+    let remainder = total - baseValue * pieces;
+
+    for (let i = 0; i < pieces; i += 1) {
+      const value = baseValue + (remainder > 0 ? 1 : 0);
+      if (remainder > 0) {
+        remainder -= 1;
+      }
+      const angle = Math.random() * Math.PI * 2;
+      const radius = 6 + Math.random() * 16;
+      const x = clamp(position.x + Math.cos(angle) * radius, 0, CONFIG.mapSize);
+      const y = clamp(position.y + Math.sin(angle) * radius, 0, CONFIG.mapSize);
+      createGoldDrop(value, { x, y });
+    }
+  };
+
   const clearExperienceDrops = () => {
     experienceDrops.forEach((drop) => drop.el.remove());
     experienceDrops.clear();
     experienceId = 0;
+  };
+
+  const clearGoldDrops = () => {
+    goldDrops.forEach((drop) => drop.el.remove());
+    goldDrops.clear();
+    goldId = 0;
   };
 
   const updatePlayer = () => {
@@ -184,8 +277,34 @@
     xpText.textContent = `LV ${playerState.level} - ${remaining} XP`;
   };
 
+  const updatePlayerGoldUI = () => {
+    if (!goldText) {
+      return;
+    }
+    goldText.textContent = `${Math.max(0, Math.floor(playerState.gold))}`;
+  };
+
+  const refreshPlayerHud = () => {
+    updatePlayerHealthUI();
+    updatePlayerXpUI();
+    updatePlayerGoldUI();
+  };
+
+  const addPlayerGold = (amount) => {
+    const stats = getPlayerStats();
+    const scaledAmount = amount * (stats.goldGainMultiplier || 1);
+    const gained = Math.max(0, Math.round(scaledAmount));
+    if (!gained) {
+      return;
+    }
+    playerState.gold += gained;
+    updatePlayerGoldUI();
+  };
+
   const addPlayerExperience = (amount) => {
-    const gained = Math.max(0, Math.round(amount));
+    const stats = getPlayerStats();
+    const scaledAmount = amount * (stats.xpGainMultiplier || 1);
+    const gained = Math.max(0, Math.round(scaledAmount));
     if (!gained) {
       return;
     }
@@ -197,6 +316,10 @@
         remaining -= needed;
         playerState.xp = 0;
         playerState.xpToNext = playerApi.getXpForLevel(playerState.level);
+        const abilityApi = getAbilityApi();
+        if (abilityApi && typeof abilityApi.onLevelUp === "function") {
+          abilityApi.onLevelUp();
+        }
       } else {
         playerState.xp += remaining;
         remaining = 0;
@@ -206,13 +329,35 @@
   };
 
   const resetPlayerState = () => {
-    if (typeof playerApi.resetState === "function") {
+    const abilityApi = getAbilityApi();
+    if (abilityApi && typeof abilityApi.resetForNewRun === "function") {
+      abilityApi.resetForNewRun();
+    } else if (typeof playerApi.resetState === "function") {
       playerApi.resetState();
+    }
+    if (abilityApi && typeof abilityApi.applyPlayerStats === "function") {
+      abilityApi.applyPlayerStats();
     }
     playerPos.x = CONFIG.mapSize / 2;
     playerPos.y = CONFIG.mapSize / 2;
-    updatePlayerHealthUI();
-    updatePlayerXpUI();
+    playerState.hp = playerState.maxHp;
+    refreshPlayerHud();
+    if (player) {
+      player.classList.remove("is-moving");
+    }
+  };
+
+  const prepareNextWave = () => {
+    const abilityApi = getAbilityApi();
+    if (abilityApi && typeof abilityApi.applyPlayerStats === "function") {
+      abilityApi.applyPlayerStats();
+    }
+    playerPos.x = CONFIG.mapSize / 2;
+    playerPos.y = CONFIG.mapSize / 2;
+    playerState.hp = playerState.maxHp;
+    playerState.invulnerableUntil = 0;
+    refreshPlayerHud();
+    keys.clear();
     if (player) {
       player.classList.remove("is-moving");
     }
@@ -275,6 +420,7 @@
       speed: typeof mob.speed === "number" ? mob.speed : CONFIG.mobSpeed,
       damage: typeof mob.damage === "number" ? mob.damage : 5,
       experience: typeof mob.experience === "number" ? mob.experience : 0,
+      gold: typeof mob.gold === "number" ? mob.gold : 0,
       hp: maxHp,
       maxHp,
       hpBar
@@ -315,6 +461,9 @@
       mobs.delete(id);
       if (mob.experience) {
         spawnExperienceDrops(mob.experience, position);
+      }
+      if (mob.gold) {
+        spawnGoldDrops(mob.gold, position);
       }
     }
 
@@ -378,8 +527,10 @@
     }
 
     const length = Math.hypot(axisX, axisY) || 1;
-    const velocityX = (axisX / length) * playerConfig.speed * delta;
-    const velocityY = (axisY / length) * playerConfig.speed * delta;
+    const stats = getPlayerStats();
+    const moveSpeed = stats.speed || playerConfig.speed;
+    const velocityX = (axisX / length) * moveSpeed * delta;
+    const velocityY = (axisY / length) * moveSpeed * delta;
 
     playerPos.x = clamp(
       playerPos.x + velocityX,
@@ -468,6 +619,45 @@
     });
   };
 
+  const updateGoldDrops = (delta) => {
+    if (!goldDrops.size) {
+      return;
+    }
+
+    const radius = playerState.pickupRadius;
+    const collectRadius = playerState.collectRadius;
+    const minSpeed = playerConfig.xpPullMinSpeed;
+    const maxSpeed = playerConfig.xpPullMaxSpeed;
+    const halfSize = CONFIG.goldOrbSize / 2;
+
+    goldDrops.forEach((drop, id) => {
+      const dx = playerPos.x - drop.x;
+      const dy = playerPos.y - drop.y;
+      const distance = Math.hypot(dx, dy);
+
+      if (distance <= radius) {
+        const pull = 1 - distance / radius;
+        const speed = minSpeed + pull * (maxSpeed - minSpeed);
+        if (distance > 0.5) {
+          drop.x = clamp(drop.x + (dx / distance) * speed * delta, halfSize, CONFIG.mapSize - halfSize);
+          drop.y = clamp(drop.y + (dy / distance) * speed * delta, halfSize, CONFIG.mapSize - halfSize);
+        }
+        drop.el.classList.add("is-attracted");
+      } else {
+        drop.el.classList.remove("is-attracted");
+      }
+
+      drop.el.style.left = `${drop.x}px`;
+      drop.el.style.top = `${drop.y}px`;
+
+      if (distance <= collectRadius) {
+        addPlayerGold(drop.value);
+        drop.el.remove();
+        goldDrops.delete(id);
+      }
+    });
+  };
+
   const tick = (timestamp) => {
     if (!active) {
       rafId = null;
@@ -480,6 +670,7 @@
     updateMovement(delta);
     updateMobs(delta, timestamp);
     updateExperienceDrops(delta);
+    updateGoldDrops(delta);
     updateCamera();
 
     rafId = window.requestAnimationFrame(tick);
@@ -518,6 +709,7 @@
     hpText = document.querySelector("[data-player-hp-text]");
     xpBar = document.querySelector("[data-player-xp-bar]");
     xpText = document.querySelector("[data-player-xp-text]");
+    goldText = document.querySelector("[data-player-gold-text]");
 
     if (!frame || !world || !player) {
       return;
@@ -532,6 +724,7 @@
     updateCamera();
     updatePlayerHealthUI();
     updatePlayerXpUI();
+    updatePlayerGoldUI();
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
@@ -545,6 +738,7 @@
     init();
     resetPlayerState();
     clearExperienceDrops();
+    clearGoldDrops();
     keys.clear();
     active = true;
     lastTime = performance.now();
@@ -553,22 +747,46 @@
     }
   };
 
-  const stop = () => {
+  const pause = () => {
     active = false;
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+    }
+    rafId = null;
     keys.clear();
-    clearExperienceDrops();
     if (player) {
       player.classList.remove("is-moving");
     }
   };
 
+  const resume = () => {
+    if (active) {
+      return;
+    }
+    active = true;
+    lastTime = performance.now();
+    if (!rafId) {
+      rafId = window.requestAnimationFrame(tick);
+    }
+  };
+
+  const stop = () => {
+    pause();
+    clearExperienceDrops();
+    clearGoldDrops();
+  };
+
   window.SCRAPPO_MAP = {
     start,
+    pause,
+    resume,
     stop,
+    prepareNextWave,
     spawnMob,
     clearMobs,
     getMobTargets,
     applyDamage,
+    refreshPlayerHud,
     getPlayerPosition: () => ({ x: playerPos.x, y: playerPos.y }),
     getMapSize: () => CONFIG.mapSize,
     getPlayerSize: () => playerConfig.size,

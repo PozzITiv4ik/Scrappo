@@ -8,6 +8,7 @@ const soundApi = window.SCRAPPO_SOUND;
 const mapApi = window.SCRAPPO_MAP;
 const waveApi = window.SCRAPPO_WAVE_SYSTEM;
 const weaponApi = window.SCRAPPO_WEAPON_SYSTEM;
+const abilityApi = window.SCRAPPO_ABILITY_SYSTEM;
 const LOCAL_STORAGE_KEY = "scrappo.lang";
 
 const getInitialLanguage = () => {
@@ -58,6 +59,9 @@ const setLanguage = (lang) => {
   localStorage.setItem(LOCAL_STORAGE_KEY, nextLang);
   applyTranslations(nextLang);
   updateLanguageButtons(nextLang);
+  if (abilityApi && typeof abilityApi.refreshTexts === "function") {
+    abilityApi.refreshTexts();
+  }
 };
 
 const showPanel = (panelName) => {
@@ -81,6 +85,10 @@ const showPanel = (panelName) => {
 
   if (!isGame && weaponApi && typeof weaponApi.stop === "function") {
     weaponApi.stop();
+  }
+
+  if (!isGame && abilityApi && typeof abilityApi.closeOverlays === "function") {
+    abilityApi.closeOverlays();
   }
 };
 
@@ -212,3 +220,7 @@ langButtons.forEach((button) => {
 setLanguage(getInitialLanguage());
 setupVolumeControls();
 setupParallax();
+
+window.SCRAPPO_UI = {
+  showPanel
+};

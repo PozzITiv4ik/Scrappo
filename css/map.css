@@ -148,6 +148,20 @@ body.is-game .stage {
   filter: drop-shadow(0 2px 10px rgba(255, 255, 255, 0.45));
 }
 
+.gold-orb {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 2;
+  animation: xpFloat 1.6s ease-in-out infinite;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
+  will-change: transform;
+}
+
+.gold-orb.is-attracted {
+  filter: drop-shadow(0 2px 10px rgba(255, 255, 255, 0.45));
+}
+
 @keyframes damageFloat {
   0% {
     opacity: 1;

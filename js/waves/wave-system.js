@@ -3,8 +3,11 @@
   const MAX_SPAWN_ATTEMPTS = 24;
 
   let running = false;
+  let paused = false;
   let waveIndex = 0;
   let waveStart = 0;
+  let pauseAt = 0;
+  let pendingWaveIndex = null;
   let rafId = null;
   let spawnStates = [];
   let timerEl = null;
@@ -79,7 +82,8 @@
   };
 
   const tick = (timestamp) => {
-    if (!running) {
+    if (!running || paused) {
+      rafId = null;
       return;
     }
 
@@ -103,11 +107,20 @@
     });
 
     if (timeLeft <= 0) {
-      waveIndex += 1;
-      if (waveIndex < waves.length) {
-        startWave(waves[waveIndex]);
-      } else {
-        stop();
+      running = false;
+      paused = false;
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+      rafId = null;
+      updateTimer(0);
+      pendingWaveIndex = waveIndex + 1;
+      const abilityApi = window.SCRAPPO_ABILITY_SYSTEM;
+      if (abilityApi && typeof abilityApi.handleWaveComplete === "function") {
+        abilityApi.handleWaveComplete({
+          waveIndex: waveIndex + 1,
+          hasNext: pendingWaveIndex < waves.length
+        });
       }
       return;
     }
@@ -131,12 +144,57 @@
     }
 
     running = true;
+    paused = false;
+    pendingWaveIndex = null;
     waveIndex = 0;
     startWave(waves[waveIndex]);
   };
 
+  const startNextWave = () => {
+    const waves = getWaveData();
+    if (!waves.length) {
+      return;
+    }
+    if (pendingWaveIndex === null || pendingWaveIndex >= waves.length) {
+      return;
+    }
+    waveIndex = pendingWaveIndex;
+    pendingWaveIndex = null;
+    running = true;
+    paused = false;
+    const mapApi = window.SCRAPPO_MAP;
+    if (mapApi && typeof mapApi.clearMobs === "function") {
+      mapApi.clearMobs();
+    }
+    startWave(waves[waveIndex]);
+  };
+
+  const pause = () => {
+    if (!running || paused) {
+      return;
+    }
+    paused = true;
+    pauseAt = performance.now();
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+    }
+    rafId = null;
+  };
+
+  const resume = () => {
+    if (!paused || !running) {
+      return;
+    }
+    paused = false;
+    const now = performance.now();
+    waveStart += now - pauseAt;
+    rafId = requestAnimationFrame(tick);
+  };
+
   const stop = () => {
     running = false;
+    paused = false;
+    pendingWaveIndex = null;
     if (rafId) {
       cancelAnimationFrame(rafId);
     }
@@ -146,6 +204,9 @@
 
   window.SCRAPPO_WAVE_SYSTEM = {
     start,
+    startNextWave,
+    pause,
+    resume,
     stop
   };
 })();

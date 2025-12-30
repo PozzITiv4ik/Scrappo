@@ -5,6 +5,7 @@ window.SCRAPPO_MOBS = {
     size: 52,
     hp: 30,
     damage: 8,
-    experience: 15
+    experience: 15,
+    gold: 5
   }
 };
