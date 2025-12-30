@@ -103,6 +103,10 @@ body {
   backdrop-filter: none;
 }
 
+.panel--characters {
+  justify-items: center;
+}
+
 .logo {
   width: min(520px, 90%);
   height: auto;
@@ -125,6 +129,16 @@ body {
   display: grid;
   gap: 14px;
   width: min(320px, 80vw);
+}
+
+.character-list {
+  display: grid;
+  gap: 14px;
+  width: min(360px, 84vw);
+}
+
+.character-button {
+  width: 100%;
 }
 
 .menu-button,

@@ -157,9 +157,9 @@ document.addEventListener("click", (event) => {
   const actionName = action.dataset.action;
   if (actionName === "settings") {
     showPanel("settings");
-  }
-
-  if (actionName === "back") {
+  } else if (actionName === "play") {
+    showPanel("characters");
+  } else if (actionName === "back") {
     showPanel("main");
   }
 });

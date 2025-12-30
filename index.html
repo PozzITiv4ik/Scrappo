@@ -23,11 +23,9 @@
             />
             <div class="menu">
               <button
-                class="menu-button is-locked"
+                class="menu-button"
                 type="button"
                 data-action="play"
-                data-disabled="true"
-                aria-disabled="true"
                 style="--delay: 0ms"
                 data-i18n="menu.play"
               >
@@ -85,6 +83,15 @@
                 data-i18n-attr="aria-label"
                 data-i18n-text="false"
               />
+            </div>
+            <button class="back-button" type="button" data-action="back" data-i18n="settings.back"></button>
+          </section>
+          <section class="panel panel--characters" data-panel="characters" aria-hidden="true">
+            <h2 class="panel-title" data-i18n="characters.title"></h2>
+            <div class="character-list">
+              <button class="menu-button character-button" type="button" data-character="normal" data-i18n="characters.normal"></button>
+              <button class="menu-button character-button" type="button" data-character="psycho" data-i18n="characters.psycho"></button>
+              <button class="menu-button character-button" type="button" data-character="agile" data-i18n="characters.agile"></button>
             </div>
             <button class="back-button" type="button" data-action="back" data-i18n="settings.back"></button>
           </section>
