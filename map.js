@@ -73,10 +73,8 @@
 
     mobId += 1;
     const id = `mob-${mobId}`;
-    const mobEl = document.createElement("img");
+    const mobEl = document.createElement("div");
     mobEl.className = "mob";
-    mobEl.src = mob.sprite;
-    mobEl.alt = "";
     mobEl.dataset.mobId = id;
     mobEl.dataset.mobType = mob.id || "mob";
     const size = typeof mob.size === "number" ? mob.size : CONFIG.playerSize;
@@ -84,13 +82,32 @@
     mobEl.style.height = `${size}px`;
     mobEl.style.left = `${position.x}px`;
     mobEl.style.top = `${position.y}px`;
+
+    const hpTrack = document.createElement("div");
+    hpTrack.className = "mob-hp";
+    const hpBar = document.createElement("div");
+    hpBar.className = "mob-hp-bar";
+    hpTrack.appendChild(hpBar);
+
+    const sprite = document.createElement("img");
+    sprite.className = "mob-sprite";
+    sprite.src = mob.sprite;
+    sprite.alt = "";
+
+    mobEl.appendChild(hpTrack);
+    mobEl.appendChild(sprite);
     world.appendChild(mobEl);
+    const maxHp = typeof mob.hp === "number" ? mob.hp : 10;
+    hpBar.style.width = "100%";
     mobs.set(id, {
       el: mobEl,
       x: position.x,
       y: position.y,
       size,
-      speed: typeof mob.speed === "number" ? mob.speed : CONFIG.mobSpeed
+      speed: typeof mob.speed === "number" ? mob.speed : CONFIG.mobSpeed,
+      hp: maxHp,
+      maxHp,
+      hpBar
     });
     return id;
   };
@@ -98,6 +115,39 @@
   const clearMobs = () => {
     mobs.forEach((mobData) => mobData.el.remove());
     mobs.clear();
+  };
+
+  const getMobTargets = () => Array.from(mobs.entries()).map(([id, mob]) => ({
+    id,
+    x: mob.x,
+    y: mob.y,
+    hp: mob.hp,
+    maxHp: mob.maxHp
+  }));
+
+  const applyDamage = (id, amount) => {
+    const mob = mobs.get(id);
+    if (!mob) {
+      return null;
+    }
+
+    const nextHp = Math.max(0, mob.hp - amount);
+    mob.hp = nextHp;
+    if (mob.hpBar) {
+      const ratio = mob.maxHp > 0 ? nextHp / mob.maxHp : 0;
+      mob.hpBar.style.width = `${Math.max(0, ratio) * 100}%`;
+    }
+
+    const position = { x: mob.x, y: mob.y };
+    if (nextHp <= 0) {
+      mob.el.remove();
+      mobs.delete(id);
+    }
+
+    return {
+      hp: nextHp,
+      position
+    };
   };
 
   const updateCamera = () => {
@@ -268,6 +318,8 @@
     stop,
     spawnMob,
     clearMobs,
+    getMobTargets,
+    applyDamage,
     getPlayerPosition: () => ({ x: playerPos.x, y: playerPos.y }),
     getMapSize: () => CONFIG.mapSize,
     getPlayerSize: () => CONFIG.playerSize,
