@@ -195,7 +195,12 @@
       axisX += 1;
     }
 
-    if (axisX === 0 && axisY === 0) {
+    const isMoving = axisX !== 0 || axisY !== 0;
+    if (player) {
+      player.classList.toggle("is-moving", isMoving);
+    }
+
+    if (!isMoving) {
       return;
     }
 
