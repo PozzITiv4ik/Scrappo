@@ -20,3 +20,15 @@ window.SCRAPPO_WEAPONS = {
     }
   }
 };
+
+(() => {
+  const translations = window.SCRAPPO_WEAPON_TEXTS || {};
+  Object.values(window.SCRAPPO_WEAPONS).forEach((weapon) => {
+    const text = translations[weapon.id];
+    if (!text) {
+      return;
+    }
+    weapon.name = text.name;
+    weapon.description = text.description;
+  });
+})();
