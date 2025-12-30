@@ -5,7 +5,7 @@
     itemSize: 28,
     itemCount: 14,
     speed: 240,
-    zoom: 1.3
+    zoom: 2.5
   };
 
   const PLANT_PATHS = [
@@ -20,12 +20,14 @@
   let frame = null;
   let world = null;
   let player = null;
+  let mobId = 0;
   let initialized = false;
   let active = false;
   let rafId = null;
   let lastTime = 0;
 
   const keys = new Set();
+  const mobs = new Map();
   const playerPos = {
     x: CONFIG.mapSize / 2,
     y: CONFIG.mapSize / 2
@@ -61,6 +63,35 @@
     const offsetX = playerPos.x - CONFIG.playerSize / 2;
     const offsetY = playerPos.y - CONFIG.playerSize / 2;
     player.style.transform = `translate3d(${offsetX}px, ${offsetY}px, 0)`;
+  };
+
+  const spawnMob = (mob, position) => {
+    if (!world || !mob || !position) {
+      return null;
+    }
+
+    mobId += 1;
+    const id = `mob-${mobId}`;
+    const mobEl = document.createElement("img");
+    mobEl.className = "mob";
+    mobEl.src = mob.sprite;
+    mobEl.alt = "";
+    mobEl.dataset.mobId = id;
+    mobEl.dataset.mobType = mob.id || "mob";
+    if (mob.size) {
+      mobEl.style.width = `${mob.size}px`;
+      mobEl.style.height = `${mob.size}px`;
+    }
+    mobEl.style.left = `${position.x}px`;
+    mobEl.style.top = `${position.y}px`;
+    world.appendChild(mobEl);
+    mobs.set(id, mobEl);
+    return id;
+  };
+
+  const clearMobs = () => {
+    mobs.forEach((mobEl) => mobEl.remove());
+    mobs.clear();
   };
 
   const updateCamera = () => {
@@ -203,6 +234,11 @@
 
   window.SCRAPPO_MAP = {
     start,
-    stop
+    stop,
+    spawnMob,
+    clearMobs,
+    getPlayerPosition: () => ({ x: playerPos.x, y: playerPos.y }),
+    getMapSize: () => CONFIG.mapSize,
+    getPlayerSize: () => CONFIG.playerSize
   };
 })();

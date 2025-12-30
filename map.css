@@ -31,6 +31,23 @@ body.is-game .stage {
   border-radius: 0;
 }
 
+.wave-timer {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 2px solid #ffffff;
+  background: rgba(0, 0, 0, 0.55);
+  color: #ffffff;
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  letter-spacing: 0.2rem;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
 .game-frame {
   width: 100%;
   height: 100%;
@@ -56,6 +73,15 @@ body.is-game .stage {
   height: 52px;
   image-rendering: auto;
   transform: translate3d(0, 0, 0);
+  pointer-events: none;
+}
+
+.mob {
+  position: absolute;
+  width: 52px;
+  height: 52px;
+  image-rendering: auto;
+  transform: translate(-50%, -50%);
   pointer-events: none;
 }
 

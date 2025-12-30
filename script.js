@@ -6,6 +6,7 @@ const volumeSlider = document.querySelector("[data-volume]");
 const volumeValue = document.querySelector("[data-volume-value]");
 const soundApi = window.SCRAPPO_SOUND;
 const mapApi = window.SCRAPPO_MAP;
+const waveApi = window.SCRAPPO_WAVE_SYSTEM;
 const LOCAL_STORAGE_KEY = "scrappo.lang";
 
 const getInitialLanguage = () => {
@@ -72,12 +73,19 @@ const showPanel = (panelName) => {
   if (!isGame && mapApi && typeof mapApi.stop === "function") {
     mapApi.stop();
   }
+
+  if (!isGame && waveApi && typeof waveApi.stop === "function") {
+    waveApi.stop();
+  }
 };
 
 const startGame = () => {
   showPanel("game");
   if (mapApi && typeof mapApi.start === "function") {
     mapApi.start();
+  }
+  if (waveApi && typeof waveApi.start === "function") {
+    waveApi.start();
   }
 };
 
