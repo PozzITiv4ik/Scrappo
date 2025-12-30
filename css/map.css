@@ -131,6 +131,16 @@ body.is-game .stage {
   width: 100%;
 }
 
+.bullet {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  image-rendering: auto;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 4;
+}
+
 .damage-number {
   position: absolute;
   color: #ffffff;

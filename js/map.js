@@ -121,6 +121,7 @@
     id,
     x: mob.x,
     y: mob.y,
+    size: mob.size,
     hp: mob.hp,
     maxHp: mob.maxHp
   }));
