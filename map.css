@@ -74,6 +74,7 @@ body.is-game .stage {
   image-rendering: auto;
   transform: translate3d(0, 0, 0);
   pointer-events: none;
+  z-index: 3;
 }
 
 .mob {
@@ -83,6 +84,7 @@ body.is-game .stage {
   image-rendering: auto;
   transform: translate(-50%, -50%);
   pointer-events: none;
+  z-index: 2;
 }
 
 .map-item {

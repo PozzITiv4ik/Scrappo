@@ -239,6 +239,7 @@
     clearMobs,
     getPlayerPosition: () => ({ x: playerPos.x, y: playerPos.y }),
     getMapSize: () => CONFIG.mapSize,
-    getPlayerSize: () => CONFIG.playerSize
+    getPlayerSize: () => CONFIG.playerSize,
+    getZoom: () => CONFIG.zoom
   };
 })();
