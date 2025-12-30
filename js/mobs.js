@@ -1,8 +1,10 @@
 window.SCRAPPO_MOBS = {
-  mob_1: {
-    id: "mob_1",
+  mob_slime: {
+    id: "mob_slime",
     sprite: "mobs/slime/mob_slime.png",
     size: 52,
-    hp: 30
+    hp: 30,
+    damage: 8,
+    experience: 15
   }
 };

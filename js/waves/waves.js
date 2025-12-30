@@ -4,7 +4,7 @@ window.SCRAPPO_WAVES = [
     duration: 20,
     spawns: [
       {
-        type: "mob_1",
+        type: "mob_slime",
         count: 10,
         interval: 2
       }

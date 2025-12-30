@@ -6,7 +6,16 @@
     itemCount: 14,
     speed: 240,
     mobSpeed: 90,
-    zoom: 2.5
+    zoom: 2.5,
+    playerMaxHp: 100,
+    playerInvulnerableMs: 500,
+    playerPickupRadius: 160,
+    playerCollectRadius: 18,
+    xpOrbSize: 18,
+    xpMinPieces: 3,
+    xpMaxPieces: 6,
+    xpPullMinSpeed: 120,
+    xpPullMaxSpeed: 520
   };
 
   const PLANT_PATHS = [
@@ -18,10 +27,21 @@
     "icons/location_item_6.png"
   ];
 
+  const EXPERIENCE_SPRITES = [
+    "icons/experience.png",
+    "icons/experience.png",
+    "icons/experience.png"
+  ];
+
   let frame = null;
   let world = null;
   let player = null;
+  let hpBar = null;
+  let hpText = null;
+  let xpBar = null;
+  let xpText = null;
   let mobId = 0;
+  let experienceId = 0;
   let initialized = false;
   let active = false;
   let rafId = null;
@@ -29,12 +49,27 @@
 
   const keys = new Set();
   const mobs = new Map();
+  const experienceDrops = new Map();
   const playerPos = {
     x: CONFIG.mapSize / 2,
     y: CONFIG.mapSize / 2
   };
+  const playerState = {
+    hp: CONFIG.playerMaxHp,
+    maxHp: CONFIG.playerMaxHp,
+    invulnerableUntil: 0,
+    level: 1,
+    xp: 0,
+    xpToNext: getXpForLevel(1),
+    pickupRadius: CONFIG.playerPickupRadius,
+    collectRadius: CONFIG.playerCollectRadius
+  };
 
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+  const getExperienceSprites = () => window.SCRAPPO_EXPERIENCE_SPRITES || EXPERIENCE_SPRITES;
+  function getXpForLevel(level) {
+    return Math.round(100 + (level - 1) * 40);
+  }
 
   const setupWorld = () => {
     world.style.width = `${CONFIG.mapSize}px`;
@@ -60,10 +95,160 @@
     }
   };
 
+  const getRandomExperienceSprite = () => {
+    const sprites = getExperienceSprites();
+    if (!sprites.length) {
+      return "icons/experience.png";
+    }
+    return sprites[Math.floor(Math.random() * sprites.length)] || sprites[0];
+  };
+
+  const createExperienceDrop = (value, position) => {
+    if (!world) {
+      return null;
+    }
+    experienceId += 1;
+    const id = `xp-${experienceId}`;
+    const orb = document.createElement("img");
+    orb.className = "xp-orb";
+    orb.src = getRandomExperienceSprite();
+    orb.alt = "";
+    const size = CONFIG.xpOrbSize;
+    orb.style.width = `${size}px`;
+    orb.style.height = `${size}px`;
+    orb.style.left = `${position.x}px`;
+    orb.style.top = `${position.y}px`;
+    world.appendChild(orb);
+    experienceDrops.set(id, {
+      id,
+      el: orb,
+      x: position.x,
+      y: position.y,
+      value
+    });
+    return id;
+  };
+
+  const spawnExperienceDrops = (amount, position) => {
+    const total = Math.max(0, Math.round(amount));
+    if (!total || !position) {
+      return;
+    }
+    const maxPieces = Math.max(1, CONFIG.xpMaxPieces);
+    const minPieces = Math.max(1, CONFIG.xpMinPieces);
+    const desiredPieces = Math.max(minPieces, Math.round(total / 6));
+    const pieces = Math.min(maxPieces, desiredPieces, total);
+    const baseValue = Math.floor(total / pieces);
+    let remainder = total - baseValue * pieces;
+
+    for (let i = 0; i < pieces; i += 1) {
+      const value = baseValue + (remainder > 0 ? 1 : 0);
+      if (remainder > 0) {
+        remainder -= 1;
+      }
+      const angle = Math.random() * Math.PI * 2;
+      const radius = 6 + Math.random() * 16;
+      const x = clamp(position.x + Math.cos(angle) * radius, 0, CONFIG.mapSize);
+      const y = clamp(position.y + Math.sin(angle) * radius, 0, CONFIG.mapSize);
+      createExperienceDrop(value, { x, y });
+    }
+  };
+
+  const clearExperienceDrops = () => {
+    experienceDrops.forEach((drop) => drop.el.remove());
+    experienceDrops.clear();
+    experienceId = 0;
+  };
+
   const updatePlayer = () => {
     const offsetX = playerPos.x - CONFIG.playerSize / 2;
     const offsetY = playerPos.y - CONFIG.playerSize / 2;
     player.style.transform = `translate3d(${offsetX}px, ${offsetY}px, 0)`;
+  };
+
+  const spawnPlayerDamageNumber = (amount) => {
+    if (!world) {
+      return;
+    }
+    const label = document.createElement("div");
+    label.className = "damage-number damage-number--player";
+    label.textContent = `-${amount}`;
+    label.style.left = `${playerPos.x}px`;
+    label.style.top = `${playerPos.y - 20}px`;
+    label.addEventListener("animationend", () => label.remove());
+    world.appendChild(label);
+  };
+
+  const updatePlayerHealthUI = () => {
+    if (!hpBar || !hpText) {
+      return;
+    }
+    const ratio = playerState.maxHp > 0 ? playerState.hp / playerState.maxHp : 0;
+    hpBar.style.width = `${Math.max(0, ratio) * 100}%`;
+    hpText.textContent = `${Math.max(0, Math.round(playerState.hp))}/${playerState.maxHp}`;
+  };
+
+  const updatePlayerXpUI = () => {
+    if (!xpBar || !xpText) {
+      return;
+    }
+    const ratio = playerState.xpToNext > 0 ? playerState.xp / playerState.xpToNext : 0;
+    xpBar.style.width = `${Math.max(0, ratio) * 100}%`;
+    const remaining = Math.max(0, Math.ceil(playerState.xpToNext - playerState.xp));
+    xpText.textContent = `LV ${playerState.level} - ${remaining} XP`;
+  };
+
+  const addPlayerExperience = (amount) => {
+    const gained = Math.max(0, Math.round(amount));
+    if (!gained) {
+      return;
+    }
+    let remaining = gained;
+    while (remaining > 0) {
+      const needed = playerState.xpToNext - playerState.xp;
+      if (remaining >= needed) {
+        playerState.level += 1;
+        remaining -= needed;
+        playerState.xp = 0;
+        playerState.xpToNext = getXpForLevel(playerState.level);
+      } else {
+        playerState.xp += remaining;
+        remaining = 0;
+      }
+    }
+    updatePlayerXpUI();
+  };
+
+  const resetPlayerState = () => {
+    playerState.maxHp = CONFIG.playerMaxHp;
+    playerState.hp = CONFIG.playerMaxHp;
+    playerState.invulnerableUntil = 0;
+    updatePlayerHealthUI();
+    playerState.level = 1;
+    playerState.xp = 0;
+    playerState.xpToNext = getXpForLevel(playerState.level);
+    playerState.pickupRadius = CONFIG.playerPickupRadius;
+    playerState.collectRadius = CONFIG.playerCollectRadius;
+    updatePlayerXpUI();
+    if (player) {
+      player.classList.remove("is-moving");
+    }
+  };
+
+  const applyPlayerDamage = (amount, now) => {
+    if (amount <= 0) {
+      return;
+    }
+    if (now < playerState.invulnerableUntil) {
+      return;
+    }
+    playerState.hp = Math.max(0, playerState.hp - amount);
+    playerState.invulnerableUntil = now + CONFIG.playerInvulnerableMs;
+    updatePlayerHealthUI();
+    spawnPlayerDamageNumber(amount);
+    if (window.SCRAPPO_SOUND && typeof window.SCRAPPO_SOUND.playPlayerHit === "function") {
+      window.SCRAPPO_SOUND.playPlayerHit();
+    }
   };
 
   const spawnMob = (mob, position) => {
@@ -105,6 +290,8 @@
       y: position.y,
       size,
       speed: typeof mob.speed === "number" ? mob.speed : CONFIG.mobSpeed,
+      damage: typeof mob.damage === "number" ? mob.damage : 5,
+      experience: typeof mob.experience === "number" ? mob.experience : 0,
       hp: maxHp,
       maxHp,
       hpBar
@@ -143,6 +330,9 @@
     if (nextHp <= 0) {
       mob.el.remove();
       mobs.delete(id);
+      if (mob.experience) {
+        spawnExperienceDrops(mob.experience, position);
+      }
     }
 
     return {
@@ -220,27 +410,78 @@
     );
   };
 
-  const updateMobs = (delta) => {
+  const updateMobs = (delta, now) => {
     if (!mobs.size) {
       return;
     }
+
+    const current = typeof now === "number" ? now : performance.now();
+    const playerRadius = CONFIG.playerSize / 2;
+    let hitApplied = false;
 
     mobs.forEach((mob) => {
       const dx = playerPos.x - mob.x;
       const dy = playerPos.y - mob.y;
       const distance = Math.hypot(dx, dy);
-      if (distance < 1) {
-        return;
+      if (distance >= 1) {
+        const step = Math.min(mob.speed * delta, distance);
+        const nextX = mob.x + (dx / distance) * step;
+        const nextY = mob.y + (dy / distance) * step;
+        const halfSize = mob.size / 2;
+        mob.x = clamp(nextX, halfSize, CONFIG.mapSize - halfSize);
+        mob.y = clamp(nextY, halfSize, CONFIG.mapSize - halfSize);
+        mob.el.style.left = `${mob.x}px`;
+        mob.el.style.top = `${mob.y}px`;
       }
 
-      const step = Math.min(mob.speed * delta, distance);
-      const nextX = mob.x + (dx / distance) * step;
-      const nextY = mob.y + (dy / distance) * step;
-      const halfSize = mob.size / 2;
-      mob.x = clamp(nextX, halfSize, CONFIG.mapSize - halfSize);
-      mob.y = clamp(nextY, halfSize, CONFIG.mapSize - halfSize);
-      mob.el.style.left = `${mob.x}px`;
-      mob.el.style.top = `${mob.y}px`;
+      if (!hitApplied && current >= playerState.invulnerableUntil) {
+        const hitDistance = playerRadius + mob.size / 2;
+        const hitDx = playerPos.x - mob.x;
+        const hitDy = playerPos.y - mob.y;
+        if (Math.hypot(hitDx, hitDy) <= hitDistance) {
+          applyPlayerDamage(mob.damage, current);
+          hitApplied = true;
+        }
+      }
+    });
+  };
+
+  const updateExperienceDrops = (delta) => {
+    if (!experienceDrops.size) {
+      return;
+    }
+
+    const radius = playerState.pickupRadius;
+    const collectRadius = playerState.collectRadius;
+    const minSpeed = CONFIG.xpPullMinSpeed;
+    const maxSpeed = CONFIG.xpPullMaxSpeed;
+    const halfSize = CONFIG.xpOrbSize / 2;
+
+    experienceDrops.forEach((drop, id) => {
+      const dx = playerPos.x - drop.x;
+      const dy = playerPos.y - drop.y;
+      const distance = Math.hypot(dx, dy);
+
+      if (distance <= radius) {
+        const pull = 1 - distance / radius;
+        const speed = minSpeed + pull * (maxSpeed - minSpeed);
+        if (distance > 0.5) {
+          drop.x = clamp(drop.x + (dx / distance) * speed * delta, halfSize, CONFIG.mapSize - halfSize);
+          drop.y = clamp(drop.y + (dy / distance) * speed * delta, halfSize, CONFIG.mapSize - halfSize);
+        }
+        drop.el.classList.add("is-attracted");
+      } else {
+        drop.el.classList.remove("is-attracted");
+      }
+
+      drop.el.style.left = `${drop.x}px`;
+      drop.el.style.top = `${drop.y}px`;
+
+      if (distance <= collectRadius) {
+        addPlayerExperience(drop.value);
+        drop.el.remove();
+        experienceDrops.delete(id);
+      }
     });
   };
 
@@ -254,7 +495,8 @@
     lastTime = timestamp;
 
     updateMovement(delta);
-    updateMobs(delta);
+    updateMobs(delta, timestamp);
+    updateExperienceDrops(delta);
     updateCamera();
 
     rafId = window.requestAnimationFrame(tick);
@@ -289,6 +531,10 @@
     frame = document.querySelector(".game-frame");
     world = document.querySelector("[data-world]");
     player = document.querySelector("[data-player]");
+    hpBar = document.querySelector("[data-player-hp-bar]");
+    hpText = document.querySelector("[data-player-hp-text]");
+    xpBar = document.querySelector("[data-player-xp-bar]");
+    xpText = document.querySelector("[data-player-xp-text]");
 
     if (!frame || !world || !player) {
       return;
@@ -297,6 +543,8 @@
     setupWorld();
     spawnItems();
     updateCamera();
+    updatePlayerHealthUI();
+    updatePlayerXpUI();
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
@@ -308,6 +556,9 @@
 
   const start = () => {
     init();
+    resetPlayerState();
+    clearExperienceDrops();
+    keys.clear();
     active = true;
     lastTime = performance.now();
     if (!rafId) {
@@ -317,6 +568,11 @@
 
   const stop = () => {
     active = false;
+    keys.clear();
+    clearExperienceDrops();
+    if (player) {
+      player.classList.remove("is-moving");
+    }
   };
 
   window.SCRAPPO_MAP = {
