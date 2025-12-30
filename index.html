@@ -145,23 +145,35 @@
               </div>
             </div>
             <div class="game-overlay inventory-overlay" data-overlay="inventory" aria-hidden="true">
-              <div class="overlay-card overlay-card--wide">
-                <div class="overlay-header">
-                  <h2 class="overlay-title" data-i18n="inventory.title"></h2>
-                  <button class="overlay-close" type="button" data-action="inventory-close" data-i18n="inventory.close"></button>
-                </div>
-                <div class="inventory-columns">
-                  <div class="inventory-section">
-                    <h3 class="overlay-subtitle" data-i18n="inventory.abilities"></h3>
-                    <div class="ability-grid" data-inventory-abilities></div>
+              <div class="inventory-layout">
+                <div class="overlay-card overlay-card--wide inventory-main">
+                  <div class="overlay-header">
+                    <h2 class="overlay-title" data-i18n="inventory.title"></h2>
+                    <button
+                      class="overlay-close"
+                      type="button"
+                      data-action="inventory-close"
+                      data-i18n="inventory.close"
+                    ></button>
                   </div>
-                  <div class="inventory-section">
-                    <h3 class="overlay-subtitle" data-i18n="inventory.stats"></h3>
-                    <div class="stats-list" data-inventory-stats></div>
+                  <div class="inventory-columns">
+                    <div class="inventory-section">
+                      <h3 class="overlay-subtitle" data-i18n="inventory.abilities"></h3>
+                      <div class="ability-grid" data-inventory-abilities></div>
+                    </div>
+                  </div>
+                  <div class="overlay-actions">
+                    <button
+                      class="overlay-button"
+                      type="button"
+                      data-action="inventory-continue"
+                      data-i18n="inventory.continue"
+                    ></button>
                   </div>
                 </div>
-                <div class="overlay-actions">
-                  <button class="overlay-button" type="button" data-action="inventory-continue" data-i18n="inventory.continue"></button>
+                <div class="overlay-card inventory-stats-card">
+                  <h3 class="overlay-subtitle" data-i18n="inventory.stats"></h3>
+                  <div class="stats-list" data-inventory-stats></div>
                 </div>
               </div>
             </div>
