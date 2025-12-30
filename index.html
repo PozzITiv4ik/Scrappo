@@ -97,9 +97,25 @@
                 <h2 class="panel-title character-title" data-i18n="characters.title"></h2>
                 <p class="character-subtitle" data-i18n="characters.subtitle"></p>
               </header>
-              <div class="character-carousel" data-character-carousel>
-                <div class="character-track" data-character-track></div>
+              <div class="character-spotlight">
+                <h3 class="character-spotlight__name" data-character-name></h3>
+                <div class="character-spotlight__content">
+                  <div class="character-preview">
+                    <div class="character-preview__frame">
+                      <img class="character-preview__img" src="" alt="" data-character-portrait />
+                    </div>
+                    <div class="character-preview__weapon">
+                      <span class="character-weapon-label" data-i18n="characters.weapon"></span>
+                      <img class="character-weapon-icon" src="" alt="" data-character-weapon />
+                    </div>
+                  </div>
+                  <div class="character-details">
+                    <p class="character-details__desc" data-character-desc></p>
+                    <ul class="character-traits" data-character-traits></ul>
+                  </div>
+                </div>
               </div>
+              <div class="character-grid" data-character-grid></div>
               <div class="character-actions">
                 <button class="back-button" type="button" data-action="back" data-i18n="settings.back"></button>
               </div>

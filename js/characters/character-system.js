@@ -1,10 +1,17 @@
 (() => {
   const characterBase = window.SCRAPPO_CHARACTER_BASE;
   const characterList = window.SCRAPPO_CHARACTERS || [];
-  const characterTrack = document.querySelector("[data-character-track]");
-  const characterCarousel = document.querySelector("[data-character-carousel]");
+  const grid = document.querySelector("[data-character-grid]");
+  const previewName = document.querySelector("[data-character-name]");
+  const previewDesc = document.querySelector("[data-character-desc]");
+  const previewPortrait = document.querySelector("[data-character-portrait]");
+  const previewWeapon = document.querySelector("[data-character-weapon]");
+  const previewTraits = document.querySelector("[data-character-traits]");
 
-  const CHARACTER_STAT_LABELS = {
+  const DEFAULT_SKIN = "icons/main_character.png";
+  const DEFAULT_WEAPON_ID = "pistol";
+
+  const STAT_LABELS = {
     maxHp: "stats.maxHp",
     speed: "stats.moveSpeed",
     pickupRadius: "stats.pickupRadius",
@@ -13,6 +20,7 @@
   };
 
   let selectedCharacterId = characterList[0]?.id || "normal";
+  let previewCharacterId = selectedCharacterId;
   let initialized = false;
 
   const getDictionary = () => {
@@ -24,6 +32,23 @@
   const t = (key, fallback = "") => {
     const dictionary = getDictionary();
     return dictionary[key] || fallback || key;
+  };
+
+  const getCharacterById = (id) => {
+    if (!id) {
+      return characterList[0] || null;
+    }
+    return characterList.find((item) => item.id === id) || characterList[0] || null;
+  };
+
+  const getCharacterSkin = (character) => {
+    return character?.skin || character?.icon || DEFAULT_SKIN;
+  };
+
+  const getWeaponSprite = (character) => {
+    const weapons = window.SCRAPPO_WEAPONS || {};
+    const weaponId = character?.weaponId || DEFAULT_WEAPON_ID;
+    return weapons[weaponId]?.sprite || weapons[DEFAULT_WEAPON_ID]?.sprite || "weapons/pistol/weapon_pistol.png";
   };
 
   const getModifierTotals = (character) => {
@@ -112,147 +137,149 @@
     }
   };
 
-  const renderCharacterCards = () => {
-    if (!characterTrack) {
+  const renderTraits = (character) => {
+    if (!previewTraits) {
       return;
     }
-    characterTrack.innerHTML = "";
-    const dictionary = getDictionary();
+    previewTraits.innerHTML = "";
+    const totals = getModifierTotals(character);
+    const rows = [];
 
-    characterList.forEach((character) => {
-      const name = dictionary[character.nameKey] || character.id;
-      const desc = dictionary[character.descKey] || "";
-      const tag = character.tagKey ? dictionary[character.tagKey] : "";
-      const notes = Array.isArray(character.notes) ? character.notes : [];
-      const totals = getModifierTotals(character);
-
-      const card = document.createElement("button");
-      card.type = "button";
-      card.className = "character-card";
-      card.dataset.characterId = character.id;
-      if (character.id === selectedCharacterId) {
-        card.classList.add("is-selected");
+    Object.entries(STAT_LABELS).forEach(([stat, labelKey]) => {
+      const mod = totals[stat];
+      if (!mod || (!mod.flat && !mod.pct)) {
+        return;
       }
-
-      const header = document.createElement("div");
-      header.className = "character-card__header";
-      const title = document.createElement("h3");
-      title.className = "character-card__name";
-      title.textContent = name;
-      header.appendChild(title);
-      if (tag) {
-        const tagEl = document.createElement("span");
-        tagEl.className = "character-card__tag";
-        tagEl.textContent = tag;
-        header.appendChild(tagEl);
-      }
-      card.appendChild(header);
-
-      if (desc) {
-        const descEl = document.createElement("p");
-        descEl.className = "character-card__desc";
-        descEl.textContent = desc;
-        card.appendChild(descEl);
-      }
-
-      const statsTitle = document.createElement("p");
-      statsTitle.className = "character-card__section-title";
-      statsTitle.textContent = t("characters.section.stats", "Stats");
-      card.appendChild(statsTitle);
-
-      const statsBox = document.createElement("div");
-      statsBox.className = "character-stats";
-      const statRows = [];
-      Object.entries(CHARACTER_STAT_LABELS).forEach(([stat, labelKey]) => {
-        const mod = totals[stat];
-        if (!mod || (!mod.flat && !mod.pct)) {
-          return;
-        }
-        const sign = mod.flat ? Math.sign(mod.flat) : Math.sign(mod.pct);
-        statRows.push({
-          label: t(labelKey, labelKey),
-          value: formatModifierValue(mod.flat, mod.pct),
-          sign
-        });
+      const sign = mod.flat ? Math.sign(mod.flat) : Math.sign(mod.pct);
+      rows.push({
+        label: t(labelKey, labelKey),
+        value: formatModifierValue(mod.flat, mod.pct),
+        sign
       });
+    });
 
-      if (!statRows.length) {
-        const row = document.createElement("div");
-        row.className = "character-stat is-neutral";
-        const label = document.createElement("span");
-        label.textContent = t("characters.traits.none", "No bonuses");
-        const value = document.createElement("span");
-        value.className = "character-stat__value";
-        value.textContent = "-";
-        row.appendChild(label);
-        row.appendChild(value);
-        statsBox.appendChild(row);
+    if (!rows.length) {
+      const item = document.createElement("li");
+      item.className = "character-trait is-neutral";
+      const label = document.createElement("span");
+      label.textContent = t("characters.traits.none", "No bonuses");
+      const value = document.createElement("span");
+      value.className = "character-trait__value";
+      value.textContent = "-";
+      item.appendChild(label);
+      item.appendChild(value);
+      previewTraits.appendChild(item);
+      return;
+    }
+
+    rows.forEach((row) => {
+      const item = document.createElement("li");
+      item.className = "character-trait";
+      if (row.sign > 0) {
+        item.classList.add("is-positive");
+      } else if (row.sign < 0) {
+        item.classList.add("is-negative");
       } else {
-        statRows.forEach((row) => {
-          const line = document.createElement("div");
-          line.className = "character-stat";
-          if (row.sign > 0) {
-            line.classList.add("is-positive");
-          } else if (row.sign < 0) {
-            line.classList.add("is-negative");
-          } else {
-            line.classList.add("is-neutral");
-          }
-          const label = document.createElement("span");
-          label.textContent = row.label;
-          const value = document.createElement("span");
-          value.className = "character-stat__value";
-          value.textContent = row.value;
-          line.appendChild(label);
-          line.appendChild(value);
-          statsBox.appendChild(line);
-        });
+        item.classList.add("is-neutral");
       }
-      card.appendChild(statsBox);
-
-      if (notes.length) {
-        const notesTitle = document.createElement("p");
-        notesTitle.className = "character-card__section-title";
-        notesTitle.textContent = t("characters.section.traits", "Traits");
-        card.appendChild(notesTitle);
-
-        const list = document.createElement("ul");
-        list.className = "character-notes";
-        notes.forEach((noteKey) => {
-          const noteText = dictionary[noteKey] || noteKey;
-          if (!noteText) {
-            return;
-          }
-          const item = document.createElement("li");
-          item.textContent = noteText;
-          list.appendChild(item);
-        });
-        card.appendChild(list);
-      }
-
-      characterTrack.appendChild(card);
+      const label = document.createElement("span");
+      label.textContent = row.label;
+      const value = document.createElement("span");
+      value.className = "character-trait__value";
+      value.textContent = row.value;
+      item.appendChild(label);
+      item.appendChild(value);
+      previewTraits.appendChild(item);
     });
   };
 
+  const renderPreview = (characterId) => {
+    const character = getCharacterById(characterId);
+    if (!character) {
+      return;
+    }
+    const dictionary = getDictionary();
+    const name = dictionary[character.nameKey] || character.id;
+    const desc = dictionary[character.descKey] || "";
+    if (previewName) {
+      previewName.textContent = name;
+    }
+    if (previewDesc) {
+      previewDesc.textContent = desc;
+    }
+    if (previewPortrait) {
+      previewPortrait.src = getCharacterSkin(character);
+      previewPortrait.alt = name;
+    }
+    if (previewWeapon) {
+      previewWeapon.src = getWeaponSprite(character);
+      previewWeapon.alt = "";
+    }
+    renderTraits(character);
+    previewCharacterId = character.id;
+  };
+
+  const renderGrid = () => {
+    if (!grid) {
+      return;
+    }
+    grid.innerHTML = "";
+    const dictionary = getDictionary();
+    characterList.forEach((character) => {
+      const name = dictionary[character.nameKey] || character.id;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "character-icon";
+      button.dataset.characterId = character.id;
+      button.setAttribute("aria-label", name);
+      if (character.id === selectedCharacterId) {
+        button.classList.add("is-selected");
+      }
+      const img = document.createElement("img");
+      img.src = character.icon || character.skin || DEFAULT_SKIN;
+      img.alt = "";
+      button.appendChild(img);
+      grid.appendChild(button);
+    });
+  };
+
+  const setPreview = (characterId) => {
+    if (previewCharacterId === characterId) {
+      return;
+    }
+    previewCharacterId = characterId;
+    renderPreview(characterId);
+  };
+
   const selectCharacter = (characterId) => {
-    const character = characterList.find((item) => item.id === characterId);
+    const character = getCharacterById(characterId);
     if (!character) {
       return;
     }
     selectedCharacterId = character.id;
     applyCharacter(character);
-    renderCharacterCards();
-    if (characterCarousel) {
-      characterCarousel.scrollLeft = 0;
-    }
+    renderGrid();
+    setPreview(selectedCharacterId);
   };
 
-  const handleCardClick = (event) => {
-    const card = event.target.closest("[data-character-id]");
-    if (!card) {
+  const handleGridHover = (event) => {
+    const target = event.target.closest("[data-character-id]");
+    if (!target) {
       return;
     }
-    selectCharacter(card.dataset.characterId);
+    setPreview(target.dataset.characterId);
+  };
+
+  const handleGridLeave = () => {
+    setPreview(selectedCharacterId);
+  };
+
+  const handleGridClick = (event) => {
+    const target = event.target.closest("[data-character-id]");
+    if (!target) {
+      return;
+    }
+    selectCharacter(target.dataset.characterId);
     const ui = window.SCRAPPO_UI;
     if (ui && typeof ui.startGame === "function") {
       ui.startGame();
@@ -260,21 +287,26 @@
   };
 
   const showSelection = () => {
-    renderCharacterCards();
-    if (characterCarousel) {
-      characterCarousel.scrollLeft = 0;
-    }
+    renderGrid();
+    renderPreview(selectedCharacterId);
   };
 
   const refreshTexts = () => {
-    renderCharacterCards();
+    renderGrid();
+    renderPreview(selectedCharacterId);
   };
 
   const init = () => {
     if (initialized) {
       return;
     }
-    document.addEventListener("click", handleCardClick);
+    if (!grid) {
+      return;
+    }
+    grid.addEventListener("click", handleGridClick);
+    grid.addEventListener("pointerover", handleGridHover);
+    grid.addEventListener("focusin", handleGridHover);
+    grid.addEventListener("pointerleave", handleGridLeave);
     selectCharacter(selectedCharacterId);
     initialized = true;
   };
