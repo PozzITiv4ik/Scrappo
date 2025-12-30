@@ -5,6 +5,7 @@ const langButtons = document.querySelectorAll("[data-lang]");
 const volumeSlider = document.querySelector("[data-volume]");
 const volumeValue = document.querySelector("[data-volume-value]");
 const soundApi = window.SCRAPPO_SOUND;
+const mapApi = window.SCRAPPO_MAP;
 const LOCAL_STORAGE_KEY = "scrappo.lang";
 
 const getInitialLanguage = () => {
@@ -63,6 +64,13 @@ const showPanel = (panelName) => {
     panel.classList.toggle("panel--active", isActive);
     panel.setAttribute("aria-hidden", String(!isActive));
   });
+};
+
+const startGame = () => {
+  showPanel("game");
+  if (mapApi && typeof mapApi.start === "function") {
+    mapApi.start();
+  }
 };
 
 const syncVolumeUI = (value) => {
@@ -149,6 +157,12 @@ const setupParallax = () => {
 };
 
 document.addEventListener("click", (event) => {
+  const character = event.target.closest("[data-character]");
+  if (character) {
+    startGame();
+    return;
+  }
+
   const action = event.target.closest("[data-action]");
   if (!action) {
     return;

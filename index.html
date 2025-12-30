@@ -95,12 +95,26 @@
             </div>
             <button class="back-button" type="button" data-action="back" data-i18n="settings.back"></button>
           </section>
+          <section class="panel panel--game" data-panel="game" aria-hidden="true">
+            <div
+              class="game-frame"
+              role="img"
+              data-i18n="game.map"
+              data-i18n-attr="aria-label"
+              data-i18n-text="false"
+            >
+              <div class="game-world" data-world>
+                <img class="player" src="icons/main_character.png" alt="" data-player />
+              </div>
+            </div>
+          </section>
         </main>
       </div>
     </div>
 
     <script src="translations.js"></script>
     <script src="sound.js"></script>
+    <script src="map.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

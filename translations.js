@@ -12,6 +12,7 @@ window.SCRAPPO_I18N = {
     "characters.normal": "1. Standard",
     "characters.psycho": "2. Psycho",
     "characters.agile": "3. Agile",
+    "game.map": "Game field",
     "lang.english": "English",
     "lang.russian": "Russian"
   },
@@ -28,6 +29,7 @@ window.SCRAPPO_I18N = {
     "characters.normal": "1. Обычный",
     "characters.psycho": "2. Псих",
     "characters.agile": "3. Ловкий",
+    "game.map": "Игровое поле",
     "lang.english": "Английский",
     "lang.russian": "Русский"
   }
