@@ -6,6 +6,7 @@ window.SCRAPPO_I18N = {
     "menu.exit": "Exit",
     "settings.title": "Settings",
     "settings.language": "Language",
+    "settings.volume": "Volume",
     "settings.back": "Back",
     "lang.english": "English",
     "lang.russian": "Russian"
@@ -17,6 +18,7 @@ window.SCRAPPO_I18N = {
     "menu.exit": "Выход",
     "settings.title": "Настройки",
     "settings.language": "Язык",
+    "settings.volume": "Громкость",
     "settings.back": "Назад",
     "lang.english": "Английский",
     "lang.russian": "Русский"

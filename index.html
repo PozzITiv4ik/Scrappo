@@ -68,6 +68,24 @@
                 <button class="lang-button" type="button" data-lang="ru" data-i18n="lang.russian"></button>
               </div>
             </div>
+            <div class="setting-group">
+              <div class="setting-row">
+                <span class="setting-label" data-i18n="settings.volume"></span>
+                <span class="setting-value" data-volume-value></span>
+              </div>
+              <input
+                class="volume-slider"
+                type="range"
+                min="0"
+                max="100"
+                step="1"
+                value="70"
+                data-volume
+                data-i18n="settings.volume"
+                data-i18n-attr="aria-label"
+                data-i18n-text="false"
+              />
+            </div>
             <button class="back-button" type="button" data-action="back" data-i18n="settings.back"></button>
           </section>
         </main>

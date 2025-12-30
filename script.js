@@ -2,6 +2,9 @@ const translations = window.SCRAPPO_I18N || {};
 
 const panels = document.querySelectorAll("[data-panel]");
 const langButtons = document.querySelectorAll("[data-lang]");
+const volumeSlider = document.querySelector("[data-volume]");
+const volumeValue = document.querySelector("[data-volume-value]");
+const soundApi = window.SCRAPPO_SOUND;
 const LOCAL_STORAGE_KEY = "scrappo.lang";
 
 const getInitialLanguage = () => {
@@ -59,6 +62,31 @@ const showPanel = (panelName) => {
     const isActive = panel.dataset.panel === panelName;
     panel.classList.toggle("panel--active", isActive);
     panel.setAttribute("aria-hidden", String(!isActive));
+  });
+};
+
+const syncVolumeUI = (value) => {
+  const percent = Math.round(value * 100);
+  if (volumeSlider) {
+    volumeSlider.value = String(percent);
+  }
+  if (volumeValue) {
+    volumeValue.textContent = `${percent}%`;
+  }
+};
+
+const setupVolumeControls = () => {
+  if (!volumeSlider || !soundApi || typeof soundApi.getVolume !== "function") {
+    return;
+  }
+
+  syncVolumeUI(soundApi.getVolume());
+
+  volumeSlider.addEventListener("input", (event) => {
+    const rawValue = Number(event.target.value);
+    const nextVolume = Number.isNaN(rawValue) ? 0 : rawValue / 100;
+    const applied = typeof soundApi.setVolume === "function" ? soundApi.setVolume(nextVolume) : nextVolume;
+    syncVolumeUI(applied);
   });
 };
 
@@ -144,4 +172,5 @@ langButtons.forEach((button) => {
 });
 
 setLanguage(getInitialLanguage());
+setupVolumeControls();
 setupParallax();
