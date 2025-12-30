@@ -3,10 +3,8 @@
 :root {
   --bg-1: #0a0f0d;
   --bg-2: #111a16;
-  --bg-3: #1a1f19;
   --panel: rgba(8, 12, 10, 0.82);
   --panel-border: rgba(214, 178, 94, 0.35);
-  --panel-glow: rgba(180, 220, 184, 0.18);
   --text: #efe7d3;
   --muted: #b6b0a0;
   --accent: #d6b25e;

@@ -1,8 +1,6 @@
 window.SCRAPPO_I18N = {
   en: {
     "meta.title": "Scrappo",
-    "meta.version": "v0.0.1",
-    "meta.mode": "Menu Prototype",
     "menu.title": "Main Menu",
     "menu.play": "Play",
     "menu.settings": "Settings",
@@ -15,8 +13,6 @@ window.SCRAPPO_I18N = {
   },
   ru: {
     "meta.title": "Scrappo",
-    "meta.version": "v0.0.1",
-    "meta.mode": "Прототип меню",
     "menu.title": "Главное меню",
     "menu.play": "Играть",
     "menu.settings": "Настройки",
