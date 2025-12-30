@@ -57,39 +57,41 @@
           </section>
 
           <section class="panel panel--settings" data-panel="settings" aria-hidden="true">
-            <h2 class="panel-title" data-i18n="settings.title"></h2>
-            <div class="setting-group">
-              <span class="setting-label" data-i18n="settings.language"></span>
-              <div
-                class="language-options"
-                role="group"
-                data-i18n="settings.language"
-                data-i18n-attr="aria-label"
-                data-i18n-text="false"
-              >
-                <button class="lang-button" type="button" data-lang="en" data-i18n="lang.english"></button>
-                <button class="lang-button" type="button" data-lang="ru" data-i18n="lang.russian"></button>
+            <div class="overlay-card settings-shell">
+              <h2 class="panel-title" data-i18n="settings.title"></h2>
+              <div class="setting-group">
+                <span class="setting-label" data-i18n="settings.language"></span>
+                <div
+                  class="language-options"
+                  role="group"
+                  data-i18n="settings.language"
+                  data-i18n-attr="aria-label"
+                  data-i18n-text="false"
+                >
+                  <button class="lang-button" type="button" data-lang="en" data-i18n="lang.english"></button>
+                  <button class="lang-button" type="button" data-lang="ru" data-i18n="lang.russian"></button>
+                </div>
               </div>
-            </div>
-            <div class="setting-group">
-              <div class="setting-row">
-                <span class="setting-label" data-i18n="settings.volume"></span>
-                <span class="setting-value" data-volume-value></span>
+              <div class="setting-group">
+                <div class="setting-row">
+                  <span class="setting-label" data-i18n="settings.volume"></span>
+                  <span class="setting-value" data-volume-value></span>
+                </div>
+                <input
+                  class="volume-slider"
+                  type="range"
+                  min="0"
+                  max="100"
+                  step="1"
+                  value="70"
+                  data-volume
+                  data-i18n="settings.volume"
+                  data-i18n-attr="aria-label"
+                  data-i18n-text="false"
+                />
               </div>
-              <input
-                class="volume-slider"
-                type="range"
-                min="0"
-                max="100"
-                step="1"
-                value="70"
-                data-volume
-                data-i18n="settings.volume"
-                data-i18n-attr="aria-label"
-                data-i18n-text="false"
-              />
+              <button class="back-button" type="button" data-action="back" data-i18n="settings.back"></button>
             </div>
-            <button class="back-button" type="button" data-action="back" data-i18n="settings.back"></button>
           </section>
           <section class="panel panel--characters" data-panel="characters" aria-hidden="true">
             <div class="character-shell">
