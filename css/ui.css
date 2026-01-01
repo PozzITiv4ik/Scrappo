@@ -298,6 +298,9 @@
 }
 
 .ui-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 4px 10px;
   border-radius: var(--ui-radius-pill);
   border: var(--ui-border);
@@ -306,6 +309,7 @@
   font-size: 0.8rem;
   letter-spacing: var(--ui-letter-md);
   text-transform: uppercase;
+  line-height: 1;
 }
 
 .ui-range {

@@ -98,6 +98,7 @@
 }
 
 .ability-card__rarity {
+  align-self: start;
   justify-self: start;
 }
 
