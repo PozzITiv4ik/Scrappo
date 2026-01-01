@@ -1,15 +1,12 @@
 (() => {
   const SOUND_PATH = "sounds/pressing_buttons.mp3";
-  const SHOT_PATH = "weapons/pistol/weapon_pistol_shot.mp3";
   const HIT_PATH = "sounds/damage_to_mob.mp3";
   const PLAYER_HIT_PATH = "sounds/damage_to_main_character.mp3";
   const STORAGE_KEY = "scrappo.volume";
   const clickSound = new Audio(SOUND_PATH);
-  const shotSound = new Audio(SHOT_PATH);
   const hitSound = new Audio(HIT_PATH);
   const playerHitSound = new Audio(PLAYER_HIT_PATH);
   clickSound.preload = "auto";
-  shotSound.preload = "auto";
   hitSound.preload = "auto";
   playerHitSound.preload = "auto";
 
@@ -18,7 +15,6 @@
   const setVolume = (value) => {
     const next = clamp(value, 0, 1);
     clickSound.volume = next;
-    shotSound.volume = next;
     hitSound.volume = next;
     playerHitSound.volume = next;
     localStorage.setItem(STORAGE_KEY, String(next));
@@ -37,14 +33,6 @@
   const playClick = () => {
     clickSound.currentTime = 0;
     const playResult = clickSound.play();
-    if (playResult && typeof playResult.catch === "function") {
-      playResult.catch(() => {});
-    }
-  };
-
-  const playShot = () => {
-    shotSound.currentTime = 0;
-    const playResult = shotSound.play();
     if (playResult && typeof playResult.catch === "function") {
       playResult.catch(() => {});
     }
@@ -83,7 +71,6 @@
 
   window.SCRAPPO_SOUND = {
     playClick,
-    playShot,
     playHit,
     playPlayerHit,
     getVolume,
