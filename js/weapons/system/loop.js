@@ -8,6 +8,10 @@
 
   const shoot = (hand, weapon, target, now) => {
     if (internal.bullets.createBullet(hand, weapon, target)) {
+      const soundApi = internal.getSoundApi();
+      if (soundApi && typeof soundApi.playShot === "function") {
+        soundApi.playShot();
+      }
       state.lastShotAt[hand] = now;
     }
   };
