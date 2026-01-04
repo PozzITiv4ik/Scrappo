@@ -1,3 +1,5 @@
+// SCRAPPO_CHEATS.gold(1000)
+
 (() => {
   const toNumber = (value, fallback) => {
     const parsed = Number(value);

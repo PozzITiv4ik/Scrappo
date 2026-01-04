@@ -85,7 +85,7 @@
 .player-weapon--left {
   left: var(--weapon-left-x);
   top: var(--weapon-left-y);
-  transform-origin: 80% 50%;
+  transform-origin: 50% 50%;
 }
 
 .player-weapon--right-2 {
@@ -96,7 +96,7 @@
 .player-weapon--left-2 {
   left: var(--weapon-left-2-x);
   top: var(--weapon-left-2-y);
-  transform-origin: 80% 50%;
+  transform-origin: 50% 50%;
 }
 
 .player-hp {
