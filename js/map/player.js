@@ -72,6 +72,30 @@
     updatePlayerGoldUI();
   };
 
+  const grantPlayerGold = (amount) => {
+    const gained = Math.max(0, Math.round(amount));
+    if (!gained) {
+      return;
+    }
+    playerState.gold += gained;
+    updatePlayerGoldUI();
+  };
+
+  const getPlayerGold = () => Math.max(0, Math.floor(playerState.gold));
+
+  const spendPlayerGold = (amount) => {
+    const cost = Math.max(0, Math.round(amount));
+    if (!cost) {
+      return true;
+    }
+    if (playerState.gold < cost) {
+      return false;
+    }
+    playerState.gold -= cost;
+    updatePlayerGoldUI();
+    return true;
+  };
+
   const addPlayerExperience = (amount) => {
     const stats = internal.getPlayerStats();
     const scaledAmount = amount * (stats.xpGainMultiplier || 1);
@@ -201,6 +225,9 @@
   internal.updatePlayerGoldUI = updatePlayerGoldUI;
   internal.refreshPlayerHud = refreshPlayerHud;
   internal.addPlayerGold = addPlayerGold;
+  internal.grantPlayerGold = grantPlayerGold;
+  internal.getPlayerGold = getPlayerGold;
+  internal.spendPlayerGold = spendPlayerGold;
   internal.addPlayerExperience = addPlayerExperience;
   internal.resetPlayerState = resetPlayerState;
   internal.prepareNextWave = prepareNextWave;

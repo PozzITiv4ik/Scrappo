@@ -51,7 +51,10 @@
     }
     state.running = true;
     const now = performance.now();
-    state.lastShotAt = { right: now, left: now };
+    state.lastShotAt = {};
+    state.hands.forEach((hand) => {
+      state.lastShotAt[hand] = now;
+    });
     state.lastTick = now;
     internal.bullets.clearBullets();
     internal.sprites.updateWeaponSprite();

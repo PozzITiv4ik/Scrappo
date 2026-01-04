@@ -11,15 +11,30 @@
   dom.overlayPause = document.querySelector('[data-overlay="pause"]');
   dom.abilityChoicesEl = document.querySelector("[data-ability-choices]");
   dom.abilitiesSubtitleEl = document.querySelector("[data-abilities-subtitle]");
+  dom.inventoryWeaponsEl = document.querySelector("[data-inventory-weapons]");
   dom.inventoryAbilitiesEl = document.querySelector("[data-inventory-abilities]");
   dom.inventoryStatsEl = document.querySelector("[data-inventory-stats]");
   dom.inventoryContinueBtn = document.querySelector('[data-action="inventory-continue"]');
   dom.inventoryCloseBtn = document.querySelector('[data-action="inventory-close"]');
+  dom.shopCard = document.querySelector("[data-shop-card]");
+  dom.shopGrid = document.querySelector("[data-shop-grid]");
+  dom.shopSubtitleEl = document.querySelector("[data-shop-subtitle]");
+  dom.shopGoldText = document.querySelector("[data-shop-gold-text]");
 
   document.addEventListener("click", (event) => {
     const abilityCard = event.target.closest(".ability-card");
     if (abilityCard && abilityCard.dataset.abilityId) {
       internal.flow.handleAbilityPick(abilityCard.dataset.abilityId);
+      return;
+    }
+    const shopButton = event.target.closest("[data-shop-buy]");
+    if (shopButton && shopButton.dataset.weaponId) {
+      internal.ui.handleShopPurchase(shopButton.dataset.weaponId);
+      return;
+    }
+    const sellButton = event.target.closest("[data-weapon-sell]");
+    if (sellButton && sellButton.dataset.slotIndex) {
+      internal.ui.handleWeaponSell(Number(sellButton.dataset.slotIndex));
       return;
     }
     const action = event.target.closest("[data-action]");

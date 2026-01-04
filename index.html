@@ -157,6 +157,22 @@
             </div>
             <div class="game-overlay inventory-overlay" data-overlay="inventory" aria-hidden="true">
               <div class="inventory-layout">
+                <div
+                  class="overlay-card overlay-card--wide inventory-shop-card ui-card ui-card--panel ui-shadow-strong"
+                  data-shop-card
+                >
+                  <div class="overlay-header shop-header">
+                    <div class="shop-title">
+                      <h2 class="overlay-title ui-title" data-i18n="shop.title"></h2>
+                      <p class="overlay-subtitle ui-subtitle" data-shop-subtitle></p>
+                    </div>
+                    <div class="shop-gold ui-row">
+                      <img class="shop-gold-icon" src="icons/gold.png" alt="" />
+                      <span class="shop-gold-text ui-text-strong" data-shop-gold-text></span>
+                    </div>
+                  </div>
+                  <div class="shop-grid" data-shop-grid></div>
+                </div>
                 <div class="overlay-card overlay-card--wide inventory-main ui-card ui-card--panel ui-shadow-strong">
                   <div class="overlay-header">
                     <h2 class="overlay-title ui-title" data-i18n="inventory.title"></h2>
@@ -168,6 +184,10 @@
                     ></button>
                   </div>
                   <div class="inventory-columns">
+                    <div class="inventory-section">
+                      <h3 class="overlay-subtitle ui-subtitle" data-i18n="inventory.weapons"></h3>
+                      <div class="weapon-grid" data-inventory-weapons></div>
+                    </div>
                     <div class="inventory-section">
                       <h3 class="overlay-subtitle ui-subtitle" data-i18n="inventory.abilities"></h3>
                       <div class="ability-grid" data-inventory-abilities></div>
@@ -232,10 +252,24 @@
                     data-weapon="left"
                   />
                   <img
+                    class="player-weapon player-weapon--left-2"
+                    src="weapons/pistol/weapon_pistol.png"
+                    alt=""
+                    data-weapon="left-2"
+                    hidden
+                  />
+                  <img
                     class="player-weapon player-weapon--right"
                     src="weapons/pistol/weapon_pistol.png"
                     alt=""
                     data-weapon="right"
+                  />
+                  <img
+                    class="player-weapon player-weapon--right-2"
+                    src="weapons/pistol/weapon_pistol.png"
+                    alt=""
+                    data-weapon="right-2"
+                    hidden
                   />
                 </div>
               </div>
@@ -283,6 +317,8 @@
     <script src="js/weapons/system/sprites.js"></script>
     <script src="js/weapons/system/loop.js"></script>
     <script src="js/weapons/system/index.js"></script>
+    <script src="js/weapons/system/shop.js"></script>
+    <script src="js/cheats.js"></script>
     <script src="js/script.js"></script>
   </body>
 </html>

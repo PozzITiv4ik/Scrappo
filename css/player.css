@@ -16,6 +16,10 @@
   --weapon-right-y: 24px;
   --weapon-left-x: -4px;
   --weapon-left-y: 24px;
+  --weapon-right-2-x: 70px;
+  --weapon-right-2-y: 38px;
+  --weapon-left-2-x: -18px;
+  --weapon-left-2-y: 38px;
 }
 
 .player-sprite {
@@ -81,6 +85,17 @@
 .player-weapon--left {
   left: var(--weapon-left-x);
   top: var(--weapon-left-y);
+  transform-origin: 80% 50%;
+}
+
+.player-weapon--right-2 {
+  left: var(--weapon-right-2-x);
+  top: var(--weapon-right-2-y);
+}
+
+.player-weapon--left-2 {
+  left: var(--weapon-left-2-x);
+  top: var(--weapon-left-2-y);
   transform-origin: 80% 50%;
 }
 

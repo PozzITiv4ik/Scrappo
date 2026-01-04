@@ -82,10 +82,191 @@
     return parts.join(", ");
   };
 
+  const formatTemplate = (template, data) => {
+    if (!template) {
+      return "";
+    }
+    return template.replace(/\{(\w+)\}/g, (match, key) =>
+      Object.prototype.hasOwnProperty.call(data, key) ? data[key] : match
+    );
+  };
+
+  const getShopApi = () => window.SCRAPPO_WEAPON_SHOP;
+
+  const getWeaponText = (weapon, field) => {
+    const shopApi = getShopApi();
+    if (shopApi && typeof shopApi.getWeaponText === "function") {
+      return shopApi.getWeaponText(weapon, field);
+    }
+    if (!weapon || !field) {
+      return "";
+    }
+    const value = weapon[field];
+    if (!value) {
+      return "";
+    }
+    if (typeof value === "string") {
+      return value;
+    }
+    if (typeof value === "object") {
+      const lang = document.documentElement.lang || "en";
+      return value[lang] || value.en || "";
+    }
+    return "";
+  };
+
+  const getPlayerGold = () => {
+    const mapApi = internal.getMapApi();
+    if (mapApi && typeof mapApi.getPlayerGold === "function") {
+      return mapApi.getPlayerGold();
+    }
+    const playerApi = internal.getPlayerApi();
+    return Math.max(0, Math.floor(playerApi?.state?.gold || 0));
+  };
+
+  const updateShopSubtitle = () => {
+    if (!dom.shopSubtitleEl) {
+      return;
+    }
+    const template = internal.i18n.t("shop.subtitle", "Wave {wave} offers");
+    dom.shopSubtitleEl.textContent = formatTemplate(template, { wave: state.activeWave || 1 });
+  };
+
+  const updateShopGold = () => {
+    if (!dom.shopGoldText) {
+      return;
+    }
+    dom.shopGoldText.textContent = `${getPlayerGold()}`;
+  };
+
+  const renderWeaponSlots = () => {
+    if (!dom.inventoryWeaponsEl) {
+      return;
+    }
+
+    dom.inventoryWeaponsEl.innerHTML = "";
+
+    const { t, getRarityLabel } = internal.i18n;
+    const weaponApi = internal.getWeaponApi();
+    const shopApi = getShopApi();
+    const weapons = window.SCRAPPO_WEAPONS || {};
+    const slots = weaponApi && typeof weaponApi.getSlots === "function" ? weaponApi.getSlots() : [];
+    const slotCount =
+      weaponApi && typeof weaponApi.getSlotCount === "function"
+        ? weaponApi.getSlotCount()
+        : Math.max(4, slots.length || 0);
+
+    for (let i = 0; i < slotCount; i += 1) {
+      const weaponId = slots[i];
+      const card = document.createElement("div");
+      card.className = "weapon-slot ui-tile";
+
+      const index = document.createElement("div");
+      index.className = "weapon-slot__index";
+      index.textContent = `#${i + 1}`;
+      card.appendChild(index);
+
+      if (!weaponId) {
+        const empty = document.createElement("div");
+        empty.className = "weapon-slot__empty ui-text-muted";
+        empty.textContent = t("inventory.slot_empty", "Empty slot");
+        card.appendChild(empty);
+        dom.inventoryWeaponsEl.appendChild(card);
+        continue;
+      }
+
+      const weapon = weapons[weaponId];
+      if (!weapon) {
+        const empty = document.createElement("div");
+        empty.className = "weapon-slot__empty ui-text-muted";
+        empty.textContent = t("inventory.slot_empty", "Empty slot");
+        card.appendChild(empty);
+        dom.inventoryWeaponsEl.appendChild(card);
+        continue;
+      }
+
+      const header = document.createElement("div");
+      header.className = "weapon-slot__header";
+      const image = document.createElement("img");
+      image.className = "weapon-slot__image";
+      image.alt = "";
+      if (weapon.sprite) {
+        image.src = weapon.sprite;
+      } else {
+        image.hidden = true;
+      }
+
+      const meta = document.createElement("div");
+      const rarity = document.createElement("div");
+      const rarityKey = weapon.rarity || "common";
+      rarity.className = `weapon-slot__rarity ui-pill shop-item__rarity--${rarityKey}`;
+      rarity.textContent = getRarityLabel(rarityKey);
+      const name = document.createElement("div");
+      name.className = "weapon-slot__name ui-text-strong";
+      name.textContent = getWeaponText(weapon, "name") || weaponId;
+
+      meta.appendChild(rarity);
+      meta.appendChild(name);
+      header.appendChild(image);
+      header.appendChild(meta);
+      card.appendChild(header);
+
+      const desc = getWeaponText(weapon, "description");
+      if (desc) {
+        card.title = desc;
+      }
+
+      const stats = document.createElement("div");
+      stats.className = "weapon-slot__stats";
+      const addStat = (label, value) => {
+        const stat = document.createElement("div");
+        stat.className = "weapon-slot__stat ui-pill";
+        stat.textContent = `${label}: ${value}`;
+        stats.appendChild(stat);
+      };
+      const damageValue = Number.isFinite(weapon.damage) ? Math.round(weapon.damage) : "-";
+      const fireRateValue = Number.isFinite(weapon.fireRate) ? weapon.fireRate.toFixed(1) : "-";
+      const rangeValue = Number.isFinite(weapon.range) ? Math.round(weapon.range) : "-";
+      addStat(t("stats.damage", "Damage"), damageValue);
+      addStat(t("stats.fireRate", "Fire Rate"), fireRateValue);
+      addStat(t("stats.range", "Range"), rangeValue);
+      card.appendChild(stats);
+
+      const actions = document.createElement("div");
+      actions.className = "weapon-slot__actions";
+      const price = shopApi && typeof shopApi.getSellPrice === "function" ? shopApi.getSellPrice(weapon) : 0;
+      const priceTag = document.createElement("div");
+      priceTag.className = "weapon-slot__price";
+      const priceIcon = document.createElement("img");
+      priceIcon.src = "icons/gold.png";
+      priceIcon.alt = "";
+      priceIcon.width = 14;
+      priceIcon.height = 14;
+      const priceText = document.createElement("span");
+      priceText.textContent = `+${price}`;
+      priceTag.appendChild(priceIcon);
+      priceTag.appendChild(priceText);
+
+      const sellButton = document.createElement("button");
+      sellButton.type = "button";
+      sellButton.className = "ui-button ui-button--small";
+      sellButton.textContent = t("inventory.sell", "Sell");
+      sellButton.dataset.weaponSell = "true";
+      sellButton.dataset.slotIndex = String(i);
+
+      actions.appendChild(priceTag);
+      actions.appendChild(sellButton);
+      card.appendChild(actions);
+
+      dom.inventoryWeaponsEl.appendChild(card);
+    }
+  };
+
   const renderInventory = () => {
     if (!dom.inventoryAbilitiesEl || !dom.inventoryStatsEl) {
       return;
     }
+    renderWeaponSlots();
     dom.inventoryAbilitiesEl.innerHTML = "";
     dom.inventoryStatsEl.innerHTML = "";
 
@@ -142,6 +323,124 @@
     });
   };
 
+  const renderShop = () => {
+    if (!dom.shopGrid || !dom.shopCard) {
+      return;
+    }
+    if (dom.shopCard.dataset.mode !== "wave") {
+      return;
+    }
+    const shopApi = getShopApi();
+    if (!shopApi || typeof shopApi.getOffers !== "function") {
+      dom.shopCard.style.display = "none";
+      return;
+    }
+    if (typeof shopApi.prepareForWave === "function") {
+      shopApi.prepareForWave(state.activeWave || 1);
+    }
+
+    dom.shopCard.style.display = "";
+    dom.shopGrid.innerHTML = "";
+
+    const offers = shopApi.getOffers();
+    const { t, getRarityLabel } = internal.i18n;
+    const weaponApi = internal.getWeaponApi();
+    const gold = getPlayerGold();
+    const slotsFull = weaponApi && typeof weaponApi.hasEmptySlot === "function"
+      ? !weaponApi.hasEmptySlot()
+      : false;
+
+    if (!offers.length) {
+      const empty = document.createElement("div");
+      empty.className = "shop-empty ui-text-muted";
+      empty.textContent = t("shop.empty", "No weapons available");
+      dom.shopGrid.appendChild(empty);
+      updateShopGold();
+      updateShopSubtitle();
+      return;
+    }
+
+    offers.forEach((offer) => {
+      const weapon = offer.weapon;
+      if (!weapon) {
+        return;
+      }
+      const rarity = weapon.rarity || "common";
+      const card = document.createElement("div");
+      card.className = "shop-item ui-tile";
+      const rarityEl = document.createElement("div");
+      rarityEl.className = `shop-item__rarity ui-pill shop-item__rarity--${rarity}`;
+      rarityEl.textContent = getRarityLabel(rarity);
+      const name = document.createElement("div");
+      name.className = "shop-item__name ui-text-strong";
+      name.textContent = getWeaponText(weapon, "name") || weapon.id;
+      const desc = document.createElement("div");
+      desc.className = "shop-item__desc ui-text-muted";
+      desc.textContent = getWeaponText(weapon, "description");
+
+      const stats = document.createElement("div");
+      stats.className = "shop-item__stats";
+      const addStat = (label, value) => {
+        const stat = document.createElement("div");
+        stat.className = "shop-item__stat ui-pill";
+        stat.textContent = `${label}: ${value}`;
+        stats.appendChild(stat);
+      };
+      const damageValue = Number.isFinite(weapon.damage) ? Math.round(weapon.damage) : "-";
+      const fireRateValue = Number.isFinite(weapon.fireRate) ? weapon.fireRate.toFixed(1) : "-";
+      const rangeValue = Number.isFinite(weapon.range) ? Math.round(weapon.range) : "-";
+      addStat(t("stats.damage", "Damage"), damageValue);
+      addStat(t("stats.fireRate", "Fire Rate"), fireRateValue);
+      addStat(t("stats.range", "Range"), rangeValue);
+
+      const priceRow = document.createElement("div");
+      priceRow.className = "shop-item__price";
+      const priceIcon = document.createElement("img");
+      priceIcon.src = "icons/gold.png";
+      priceIcon.alt = "";
+      priceIcon.width = 16;
+      priceIcon.height = 16;
+      const priceText = document.createElement("span");
+      priceText.textContent = `${offer.price}`;
+      priceRow.appendChild(priceIcon);
+      priceRow.appendChild(priceText);
+
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "ui-button ui-button--small";
+      button.dataset.shopBuy = "true";
+      button.dataset.weaponId = weapon.id;
+
+      const owned = weaponApi && typeof weaponApi.hasWeapon === "function"
+        ? weaponApi.hasWeapon(weapon.id)
+        : false;
+      const canAfford = gold >= offer.price;
+      if (owned) {
+        button.textContent = t("shop.owned", "Owned");
+      } else if (slotsFull) {
+        button.textContent = t("shop.slots_full", "Slots full");
+      } else if (!canAfford) {
+        button.textContent = t("shop.not_enough", "Not enough gold");
+      } else {
+        button.textContent = t("shop.buy", "Buy");
+      }
+      button.disabled = owned || slotsFull || !canAfford;
+
+      card.appendChild(rarityEl);
+      card.appendChild(name);
+      if (desc.textContent) {
+        card.appendChild(desc);
+      }
+      card.appendChild(stats);
+      card.appendChild(priceRow);
+      card.appendChild(button);
+      dom.shopGrid.appendChild(card);
+    });
+
+    updateShopGold();
+    updateShopSubtitle();
+  };
+
   const renderAbilityChoices = () => {
     if (!dom.abilityChoicesEl) {
       return;
@@ -188,8 +487,55 @@
     openOverlay(dom.overlayAbilities);
   };
 
+  const handleShopPurchase = (weaponId) => {
+    const shopApi = getShopApi();
+    if (!shopApi || typeof shopApi.purchase !== "function") {
+      return;
+    }
+    shopApi.purchase(weaponId);
+    renderInventory();
+    renderShop();
+  };
+
+  const handleWeaponSell = (slotIndex) => {
+    const weaponApi = internal.getWeaponApi();
+    if (!weaponApi || typeof weaponApi.removeWeapon !== "function") {
+      return;
+    }
+    const slots = typeof weaponApi.getSlots === "function" ? weaponApi.getSlots() : [];
+    const weaponId = slots[slotIndex];
+    if (!weaponId) {
+      return;
+    }
+
+    const weapons = window.SCRAPPO_WEAPONS || {};
+    const weapon = weapons[weaponId];
+    const shopApi = getShopApi();
+    const sellPrice = shopApi && typeof shopApi.getSellPrice === "function" && weapon
+      ? shopApi.getSellPrice(weapon)
+      : 0;
+    const removedId = weaponApi.removeWeapon(slotIndex);
+    if (!removedId) {
+      return;
+    }
+    const mapApi = internal.getMapApi();
+    if (sellPrice > 0 && mapApi && typeof mapApi.grantPlayerGold === "function") {
+      mapApi.grantPlayerGold(sellPrice);
+    }
+    renderInventory();
+    renderShop();
+  };
+
   const openInventory = (mode) => {
     renderInventory();
+    if (dom.shopCard) {
+      const showShop = mode === "wave";
+      dom.shopCard.dataset.mode = mode;
+      dom.shopCard.style.display = showShop ? "" : "none";
+      if (showShop) {
+        renderShop();
+      }
+    }
     closeOverlay(dom.overlayAbilities);
     closeOverlay(dom.overlayPause);
     openOverlay(dom.overlayInventory);
@@ -220,6 +566,7 @@
 
   const refreshTexts = () => {
     renderInventory();
+    renderShop();
     if (isOverlayOpen(dom.overlayAbilities)) {
       renderAbilityChoices();
       updateAbilitiesSubtitle();
@@ -245,9 +592,12 @@
     closeOverlay,
     closeAllOverlays,
     renderInventory,
+    renderShop,
     renderAbilityChoices,
     updateAbilitiesSubtitle,
     openAbilitySelection,
+    handleShopPurchase,
+    handleWeaponSell,
     openInventory,
     openPauseMenu,
     refreshTexts

@@ -25,10 +25,15 @@
     overlayPause: null,
     abilityChoicesEl: null,
     abilitiesSubtitleEl: null,
+    inventoryWeaponsEl: null,
     inventoryAbilitiesEl: null,
     inventoryStatsEl: null,
     inventoryContinueBtn: null,
-    inventoryCloseBtn: null
+    inventoryCloseBtn: null,
+    shopCard: null,
+    shopGrid: null,
+    shopSubtitleEl: null,
+    shopGoldText: null
   };
 
   const getPlayerApi = () => window.SCRAPPO_PLAYER;

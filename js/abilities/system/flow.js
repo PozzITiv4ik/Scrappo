@@ -82,6 +82,10 @@
     state.activeWave = waveIndex || 1;
     state.hasNextWave = hasNext;
     state.flowState = "wave-end";
+    const shopApi = window.SCRAPPO_WEAPON_SHOP;
+    if (shopApi && typeof shopApi.prepareForWave === "function") {
+      shopApi.prepareForWave(state.activeWave);
+    }
     pauseGame(false);
     if (state.pendingSelections > 0) {
       internal.ui.openAbilitySelection();
@@ -96,10 +100,14 @@
 
   const resetForNewRun = () => {
     const playerApi = internal.getPlayerApi();
+    const shopApi = window.SCRAPPO_WEAPON_SHOP;
     internal.modifiers.clearInventory();
     state.pendingSelections = 0;
     state.flowState = "playing";
     internal.ui.closeAllOverlays();
+    if (shopApi && typeof shopApi.reset === "function") {
+      shopApi.reset();
+    }
     if (playerApi && typeof playerApi.resetState === "function") {
       playerApi.resetState();
     }

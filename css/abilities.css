@@ -42,6 +42,102 @@
   min-width: 0;
 }
 
+.inventory-shop-card {
+  grid-column: 1 / -1;
+}
+
+.shop-header {
+  flex-wrap: wrap;
+}
+
+.shop-gold {
+  gap: var(--ui-space-2);
+}
+
+.shop-gold-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.shop-item {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  min-height: 180px;
+  text-align: left;
+}
+
+.shop-item__name {
+  font-size: 1.05rem;
+  letter-spacing: 0.12rem;
+  text-transform: uppercase;
+}
+
+.shop-item__rarity {
+  align-self: start;
+  justify-self: start;
+}
+
+.shop-item__desc {
+  font-size: 0.9rem;
+  letter-spacing: 0.06rem;
+}
+
+.shop-item__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.shop-item__stat {
+  font-size: 0.75rem;
+  letter-spacing: 0.08rem;
+}
+
+.shop-item__price {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.shop-item__rarity--common {
+  color: var(--text-muted);
+}
+
+.shop-item__rarity--uncommon {
+  color: var(--mist-100);
+  border-color: var(--mist-100);
+}
+
+.shop-item__rarity--rare {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.shop-item__rarity--epic {
+  color: var(--accent-strong);
+  border-color: var(--accent-strong);
+}
+
+.shop-item__rarity--legendary {
+  color: var(--mist-50);
+  border-color: var(--mist-50);
+  background: var(--coal-55);
+}
+
+.shop-empty {
+  padding: 12px;
+  border: var(--ui-border);
+  border-radius: var(--ui-radius-md);
+  text-align: center;
+}
+
 .overlay-header {
   display: flex;
   align-items: center;
@@ -126,6 +222,91 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 12px;
+}
+
+.weapon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.weapon-slot {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  min-height: 150px;
+}
+
+.weapon-slot__index {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 0.65rem;
+  letter-spacing: 0.08rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.weapon-slot__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.weapon-slot__image {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  padding: 6px;
+  border-radius: 10px;
+  border: 1px solid var(--outline);
+  background: var(--coal-85);
+}
+
+.weapon-slot__name {
+  font-size: 0.95rem;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+}
+
+.weapon-slot__rarity {
+  align-self: start;
+  justify-self: start;
+}
+
+.weapon-slot__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.weapon-slot__stat {
+  font-size: 0.75rem;
+  letter-spacing: 0.08rem;
+}
+
+.weapon-slot__actions {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.weapon-slot__price {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.weapon-slot__empty {
+  min-height: 86px;
+  display: grid;
+  place-items: center;
+  text-align: center;
 }
 
 .ability-item {

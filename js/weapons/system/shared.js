@@ -6,14 +6,14 @@
   const SLOT_COUNT = 4;
   const weaponSlots = new Array(SLOT_COUNT).fill(null);
   weaponSlots[0] = "pistol";
-  const handSlots = { right: 0, left: 1 };
-  const hands = ["right", "left"];
+  const handSlots = { right: 0, left: 1, "right-2": 2, "left-2": 3 };
+  const hands = ["right", "left", "right-2", "left-2"];
 
   const state = {
     weaponSlots,
     handSlots,
     hands,
-    lastShotAt: { right: 0, left: 0 },
+    lastShotAt: { right: 0, left: 0, "right-2": 0, "left-2": 0 },
     lastTick: 0,
     running: false,
     rafId: null,
