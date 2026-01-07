@@ -1,3 +1,4 @@
+import { getText } from "../../core/i18n.js";
 import { registry } from "../../core/registry.js";
 import { WEAPONS } from "../../data/weapons.js";
 
@@ -31,23 +32,7 @@ const getPrice = (weapon) => {
 
 const getSellPrice = (weapon) => Math.max(0, Math.round(getPrice(weapon) * SELL_RATIO));
 
-const getWeaponText = (weapon, field) => {
-  if (!weapon || !field) {
-    return "";
-  }
-  const value = weapon[field];
-  if (!value) {
-    return "";
-  }
-  if (typeof value === "string") {
-    return value;
-  }
-  if (typeof value === "object") {
-    const lang = document.documentElement.lang || "en";
-    return value[lang] || value.en || "";
-  }
-  return "";
-};
+const getWeaponText = (weapon, field) => getText(weapon?.[field]);
 
 const pickOffers = () => {
   const pool = getCatalog();

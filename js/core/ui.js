@@ -1,4 +1,4 @@
-import { I18N } from "../data/i18n.js";
+import { getDictionary, hasLang } from "./i18n.js";
 import { registry } from "./registry.js";
 
 const panels = document.querySelectorAll("[data-panel]");
@@ -16,16 +16,16 @@ const getCharacterSystem = () => registry.get("character");
 
 const getInitialLanguage = () => {
   const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-  if (stored && I18N[stored]) {
+  if (stored && hasLang(stored)) {
     return stored;
   }
 
   const browserLang = navigator.language && navigator.language.toLowerCase().startsWith("ru") ? "ru" : "en";
-  return I18N[browserLang] ? browserLang : "en";
+  return hasLang(browserLang) ? browserLang : "en";
 };
 
 const applyTranslations = (lang) => {
-  const dictionary = I18N[lang] || I18N.en;
+  const dictionary = getDictionary(lang);
   document.documentElement.lang = lang;
   document.title = dictionary["meta.title"] || "Scrappo";
 
@@ -58,7 +58,7 @@ const updateLanguageButtons = (activeLang) => {
 };
 
 const setLanguage = (lang) => {
-  const nextLang = I18N[lang] ? lang : "en";
+  const nextLang = hasLang(lang) ? lang : "en";
   localStorage.setItem(LOCAL_STORAGE_KEY, nextLang);
   applyTranslations(nextLang);
   updateLanguageButtons(nextLang);

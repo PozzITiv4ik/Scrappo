@@ -1,4 +1,5 @@
 ﻿import { WEAPONS } from "../../data/weapons.js";
+import { formatTemplate, getText } from "../../core/i18n.js";
 import { internal } from "./internal.js";
 
 const { abilities, rarityWeightsByWave, state, dom } = internal;
@@ -79,15 +80,6 @@ const { abilities, rarityWeightsByWave, state, dom } = internal;
     return parts.join(", ");
   };
 
-  const formatTemplate = (template, data) => {
-    if (!template) {
-      return "";
-    }
-    return template.replace(/\{(\w+)\}/g, (match, key) =>
-      Object.prototype.hasOwnProperty.call(data, key) ? data[key] : match
-    );
-  };
-
   const getShopApi = () => internal.getShopApi();
 
   const getWeaponText = (weapon, field) => {
@@ -95,21 +87,7 @@ const { abilities, rarityWeightsByWave, state, dom } = internal;
     if (shopApi && typeof shopApi.getWeaponText === "function") {
       return shopApi.getWeaponText(weapon, field);
     }
-    if (!weapon || !field) {
-      return "";
-    }
-    const value = weapon[field];
-    if (!value) {
-      return "";
-    }
-    if (typeof value === "string") {
-      return value;
-    }
-    if (typeof value === "object") {
-      const lang = document.documentElement.lang || "en";
-      return value[lang] || value.en || "";
-    }
-    return "";
+    return getText(weapon?.[field]);
   };
 
   const getPlayerGold = () => {

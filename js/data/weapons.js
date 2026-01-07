@@ -1,4 +1,4 @@
-import { WEAPON_TEXTS } from "./weapons-texts.js";
+import { WEAPON_TEXTS } from "./i18n.js";
 
 const BASE_WEAPONS = {
   pistol: {

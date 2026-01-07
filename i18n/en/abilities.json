@@ -1,0 +1,46 @@
+{
+  "hp_flat_5": {
+    "name": "+5 Max HP",
+    "description": "Increase max HP by 5."
+  },
+  "hp_pct_1": {
+    "name": "+1% Max HP",
+    "description": "Increase max HP by 1%."
+  },
+  "speed_pct_5": {
+    "name": "+5% Move Speed",
+    "description": "Increase movement speed by 5%."
+  },
+  "pickup_flat_12": {
+    "name": "+12 Pickup Radius",
+    "description": "Increase pickup radius by 12."
+  },
+  "damage_flat_1": {
+    "name": "+1 Damage",
+    "description": "Increase weapon damage by 1."
+  },
+  "fire_rate_pct_5": {
+    "name": "+5% Fire Rate",
+    "description": "Increase fire rate by 5%."
+  },
+  "xp_gain_pct_5": {
+    "name": "+5% XP Gain",
+    "description": "Gain 5% more experience."
+  },
+  "gold_gain_pct_5": {
+    "name": "+5% Gold Gain",
+    "description": "Gain 5% more gold."
+  },
+  "hp_flat_15": {
+    "name": "+15 Max HP",
+    "description": "Increase max HP by 15."
+  },
+  "damage_pct_10": {
+    "name": "+10% Damage",
+    "description": "Increase weapon damage by 10%."
+  },
+  "fire_rate_pct_12": {
+    "name": "+12% Fire Rate",
+    "description": "Increase fire rate by 12%."
+  }
+}

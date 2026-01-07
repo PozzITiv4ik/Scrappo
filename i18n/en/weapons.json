@@ -1,0 +1,46 @@
+{
+  "pistol": {
+    "name": "Pistol",
+    "description": "Basic sidearm."
+  },
+  "scrap_smg": {
+    "name": "Scrap SMG",
+    "description": "Rapid burst, low damage."
+  },
+  "rivet_rifle": {
+    "name": "Rivet Rifle",
+    "description": "Balanced damage and fire rate."
+  },
+  "dust_repeater": {
+    "name": "Dust Repeater",
+    "description": "Fast rhythm, mid-range reach."
+  },
+  "coil_carbine": {
+    "name": "Coil Carbine",
+    "description": "Accurate long-range carbine."
+  },
+  "arc_driver": {
+    "name": "Arc Driver",
+    "description": "Heavy punch, steady cadence."
+  },
+  "gutter_cannon": {
+    "name": "Gutter Cannon",
+    "description": "Slow, hard-hitting shots."
+  },
+  "bore_cannon": {
+    "name": "Bore Cannon",
+    "description": "Massive damage, low fire rate."
+  },
+  "storm_lancer": {
+    "name": "Storm Lancer",
+    "description": "Stable fire with extended range."
+  },
+  "nova_lance": {
+    "name": "Nova Lance",
+    "description": "Elite damage with long reach."
+  },
+  "kingmaker": {
+    "name": "Kingmaker",
+    "description": "Brutal impact per shot."
+  }
+}

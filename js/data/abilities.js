@@ -1,4 +1,4 @@
-import { ABILITY_TEXTS } from "./abilities-texts.js";
+import { ABILITY_TEXTS } from "./i18n.js";
 
 const BASE_ABILITIES = [
   {
