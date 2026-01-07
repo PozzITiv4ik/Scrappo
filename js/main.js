@@ -1,0 +1,10 @@
+import "./core/registry.js";
+import "./audio/index.js";
+import "./core/player.js";
+import "./systems/map/index.js";
+import "./systems/weapons/index.js";
+import "./systems/abilities/index.js";
+import "./systems/waves/system.js";
+import "./systems/characters/index.js";
+import "./core/ui.js";
+import "./core/cheats.js";
